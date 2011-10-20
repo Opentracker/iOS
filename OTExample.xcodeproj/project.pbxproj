@@ -1,0 +1,288 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		4C299DDD14505B7C008EBE23 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299DDC14505B7C008EBE23 /* UIKit.framework */; };
+		4C299DDF14505B7C008EBE23 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299DDE14505B7C008EBE23 /* Foundation.framework */; };
+		4C299DE114505B7C008EBE23 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299DE014505B7C008EBE23 /* CoreGraphics.framework */; };
+		4C299DE714505B7C008EBE23 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4C299DE514505B7C008EBE23 /* InfoPlist.strings */; };
+		4C299DE914505B7C008EBE23 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299DE814505B7C008EBE23 /* main.m */; };
+		4C299DED14505B7C008EBE23 /* OTExampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299DEC14505B7C008EBE23 /* OTExampleAppDelegate.m */; };
+		4C299DF014505B7C008EBE23 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C299DEE14505B7C008EBE23 /* MainWindow.xib */; };
+		4C299DF314505B7C008EBE23 /* OTExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299DF214505B7C008EBE23 /* OTExampleViewController.m */; };
+		4C299DF614505B7C008EBE23 /* OTExampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C299DF414505B7C008EBE23 /* OTExampleViewController.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		4C299DD814505B7C008EBE23 /* OTExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OTExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4C299DDC14505B7C008EBE23 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		4C299DDE14505B7C008EBE23 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		4C299DE014505B7C008EBE23 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		4C299DE414505B7C008EBE23 /* OTExample-Info.plist */ = {isa = PBXFileReference; path = "OTExample-Info.plist"; sourceTree = "<group>"; };
+		4C299DE614505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		4C299DE814505B7C008EBE23 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		4C299DEA14505B7C008EBE23 /* OTExample-Prefix.pch */ = {isa = PBXFileReference; path = "OTExample-Prefix.pch"; sourceTree = "<group>"; };
+		4C299DEB14505B7C008EBE23 /* OTExampleAppDelegate.h */ = {isa = PBXFileReference; path = OTExampleAppDelegate.h; sourceTree = "<group>"; };
+		4C299DEC14505B7C008EBE23 /* OTExampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTExampleAppDelegate.m; sourceTree = "<group>"; };
+		4C299DEF14505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
+		4C299DF114505B7C008EBE23 /* OTExampleViewController.h */ = {isa = PBXFileReference; path = OTExampleViewController.h; sourceTree = "<group>"; };
+		4C299DF214505B7C008EBE23 /* OTExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTExampleViewController.m; sourceTree = "<group>"; };
+		4C299DF514505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OTExampleViewController.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		4C299DD514505B7C008EBE23 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C299DDD14505B7C008EBE23 /* UIKit.framework in Frameworks */,
+				4C299DDF14505B7C008EBE23 /* Foundation.framework in Frameworks */,
+				4C299DE114505B7C008EBE23 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4C299DCD14505B7C008EBE23 = {
+			isa = PBXGroup;
+			children = (
+				4C299DE214505B7C008EBE23 /* OTExample */,
+				4C299DDB14505B7C008EBE23 /* Frameworks */,
+				4C299DD914505B7C008EBE23 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4C299DD914505B7C008EBE23 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				4C299DD814505B7C008EBE23 /* OTExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4C299DDB14505B7C008EBE23 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				4C299DDC14505B7C008EBE23 /* UIKit.framework */,
+				4C299DDE14505B7C008EBE23 /* Foundation.framework */,
+				4C299DE014505B7C008EBE23 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		4C299DE214505B7C008EBE23 /* OTExample */ = {
+			isa = PBXGroup;
+			children = (
+				4C299DEB14505B7C008EBE23 /* OTExampleAppDelegate.h */,
+				4C299DEC14505B7C008EBE23 /* OTExampleAppDelegate.m */,
+				4C299DEE14505B7C008EBE23 /* MainWindow.xib */,
+				4C299DF114505B7C008EBE23 /* OTExampleViewController.h */,
+				4C299DF214505B7C008EBE23 /* OTExampleViewController.m */,
+				4C299DF414505B7C008EBE23 /* OTExampleViewController.xib */,
+				4C299DE314505B7C008EBE23 /* Supporting Files */,
+			);
+			path = OTExample;
+			sourceTree = "<group>";
+		};
+		4C299DE314505B7C008EBE23 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4C299DE414505B7C008EBE23 /* OTExample-Info.plist */,
+				4C299DE514505B7C008EBE23 /* InfoPlist.strings */,
+				4C299DE814505B7C008EBE23 /* main.m */,
+				4C299DEA14505B7C008EBE23 /* OTExample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		4C299DD714505B7C008EBE23 /* OTExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4C299DF914505B7C008EBE23 /* Build configuration list for PBXNativeTarget "OTExample" */;
+			buildPhases = (
+				4C299DD414505B7C008EBE23 /* Sources */,
+				4C299DD514505B7C008EBE23 /* Frameworks */,
+				4C299DD614505B7C008EBE23 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = OTExample;
+			productName = OTExample;
+			productReference = 4C299DD814505B7C008EBE23 /* OTExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4C299DCF14505B7C008EBE23 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4C299DD214505B7C008EBE23 /* Build configuration list for PBXProject "OTExample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 4C299DCD14505B7C008EBE23;
+			productRefGroup = 4C299DD914505B7C008EBE23 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4C299DD714505B7C008EBE23 /* OTExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		4C299DD614505B7C008EBE23 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C299DE714505B7C008EBE23 /* InfoPlist.strings in Resources */,
+				4C299DF014505B7C008EBE23 /* MainWindow.xib in Resources */,
+				4C299DF614505B7C008EBE23 /* OTExampleViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		4C299DD414505B7C008EBE23 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4C299DE914505B7C008EBE23 /* main.m in Sources */,
+				4C299DED14505B7C008EBE23 /* OTExampleAppDelegate.m in Sources */,
+				4C299DF314505B7C008EBE23 /* OTExampleViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		4C299DE514505B7C008EBE23 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C299DE614505B7C008EBE23 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		4C299DEE14505B7C008EBE23 /* MainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C299DEF14505B7C008EBE23 /* en */,
+			);
+			name = MainWindow.xib;
+			sourceTree = "<group>";
+		};
+		4C299DF414505B7C008EBE23 /* OTExampleViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				4C299DF514505B7C008EBE23 /* en */,
+			);
+			name = OTExampleViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4C299DF714505B7C008EBE23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		4C299DF814505B7C008EBE23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		4C299DFA14505B7C008EBE23 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OTExample/OTExample-Prefix.pch";
+				INFOPLIST_FILE = "OTExample/OTExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		4C299DFB14505B7C008EBE23 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "OTExample/OTExample-Prefix.pch";
+				INFOPLIST_FILE = "OTExample/OTExample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4C299DD214505B7C008EBE23 /* Build configuration list for PBXProject "OTExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C299DF714505B7C008EBE23 /* Debug */,
+				4C299DF814505B7C008EBE23 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4C299DF914505B7C008EBE23 /* Build configuration list for PBXNativeTarget "OTExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4C299DFA14505B7C008EBE23 /* Debug */,
+				4C299DFB14505B7C008EBE23 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 4C299DCF14505B7C008EBE23 /* Project object */;
+}
