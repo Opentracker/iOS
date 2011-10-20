@@ -1,0 +1,12 @@
+ld
+xcuserdata
+*.mode*
+*pbxuser
+*.perspectivev3
+project.xcworkspace
+xcuserdata
+*tmproj
+~*
+.DS_Store
+*.orig
+.svn
