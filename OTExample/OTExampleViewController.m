@@ -7,8 +7,20 @@
 //
 
 #import "OTExampleViewController.h"
+#import "OTLogService.h"
 
 @implementation OTExampleViewController
+-(IBAction)clickedButton:(id)sender {
+    NSLog(@"clickedButton");
+   [[OTLogService sharedOTLogService] sendEvent:@"button clicked" ];
+}
+-(IBAction)movedSlider:(id)sender{
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init ];
+    [dictionary setObject:@"slider moved" forKey:@"title"];
+    [dictionary setObject:[[NSString alloc] initWithFormat:@"%d", (int)slider.value] forKey:@"value"];
+    [[OTLogService sharedOTLogService]  sendEvent:dictionary ];
+    [dictionary release];
+}
 
 - (void)didReceiveMemoryWarning
 {
