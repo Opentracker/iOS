@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface OTExampleViewController : UIViewController
+@interface OTExampleViewController : UIViewController{
+    IBOutlet UISlider *slider;
+}
 
+-(IBAction)clickedButton :(id)sender;
+-(IBAction)movedSlider:(id)sender;
 @end

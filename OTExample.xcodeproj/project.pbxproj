@@ -16,6 +16,13 @@
 		4C299DF014505B7C008EBE23 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C299DEE14505B7C008EBE23 /* MainWindow.xib */; };
 		4C299DF314505B7C008EBE23 /* OTExampleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299DF214505B7C008EBE23 /* OTExampleViewController.m */; };
 		4C299DF614505B7C008EBE23 /* OTExampleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C299DF414505B7C008EBE23 /* OTExampleViewController.xib */; };
+		4C299E05145060F7008EBE23 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299E04145060F7008EBE23 /* CoreLocation.framework */; };
+		4C299E0814506102008EBE23 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299E0714506102008EBE23 /* libz.dylib */; };
+		4C299E0A14506108008EBE23 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C299E0914506108008EBE23 /* SystemConfiguration.framework */; };
+		4C299E181450660B008EBE23 /* OTDataSockets.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E111450660B008EBE23 /* OTDataSockets.m */; };
+		4C299E191450660B008EBE23 /* OTFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E131450660B008EBE23 /* OTFileUtils.m */; };
+		4C299E1A1450660B008EBE23 /* OTLogService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E151450660B008EBE23 /* OTLogService.m */; };
+		4C299E1B1450660B008EBE23 /* OTSend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E171450660B008EBE23 /* OTSend.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,16 +30,27 @@
 		4C299DDC14505B7C008EBE23 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		4C299DDE14505B7C008EBE23 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4C299DE014505B7C008EBE23 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		4C299DE414505B7C008EBE23 /* OTExample-Info.plist */ = {isa = PBXFileReference; path = "OTExample-Info.plist"; sourceTree = "<group>"; };
+		4C299DE414505B7C008EBE23 /* OTExample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OTExample-Info.plist"; sourceTree = "<group>"; };
 		4C299DE614505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4C299DE814505B7C008EBE23 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4C299DEA14505B7C008EBE23 /* OTExample-Prefix.pch */ = {isa = PBXFileReference; path = "OTExample-Prefix.pch"; sourceTree = "<group>"; };
-		4C299DEB14505B7C008EBE23 /* OTExampleAppDelegate.h */ = {isa = PBXFileReference; path = OTExampleAppDelegate.h; sourceTree = "<group>"; };
+		4C299DEA14505B7C008EBE23 /* OTExample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OTExample-Prefix.pch"; sourceTree = "<group>"; };
+		4C299DEB14505B7C008EBE23 /* OTExampleAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTExampleAppDelegate.h; sourceTree = "<group>"; };
 		4C299DEC14505B7C008EBE23 /* OTExampleAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTExampleAppDelegate.m; sourceTree = "<group>"; };
 		4C299DEF14505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		4C299DF114505B7C008EBE23 /* OTExampleViewController.h */ = {isa = PBXFileReference; path = OTExampleViewController.h; sourceTree = "<group>"; };
+		4C299DF114505B7C008EBE23 /* OTExampleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OTExampleViewController.h; sourceTree = "<group>"; };
 		4C299DF214505B7C008EBE23 /* OTExampleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OTExampleViewController.m; sourceTree = "<group>"; };
 		4C299DF514505B7C008EBE23 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OTExampleViewController.xib; sourceTree = "<group>"; };
+		4C299E04145060F7008EBE23 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		4C299E0714506102008EBE23 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		4C299E0914506108008EBE23 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		4C299E101450660B008EBE23 /* OTDataSockets.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTDataSockets.h; sourceTree = "<group>"; };
+		4C299E111450660B008EBE23 /* OTDataSockets.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTDataSockets.m; sourceTree = "<group>"; };
+		4C299E121450660B008EBE23 /* OTFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTFileUtils.h; sourceTree = "<group>"; };
+		4C299E131450660B008EBE23 /* OTFileUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTFileUtils.m; sourceTree = "<group>"; };
+		4C299E141450660B008EBE23 /* OTLogService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTLogService.h; sourceTree = "<group>"; };
+		4C299E151450660B008EBE23 /* OTLogService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTLogService.m; sourceTree = "<group>"; };
+		4C299E161450660B008EBE23 /* OTSend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTSend.h; sourceTree = "<group>"; };
+		4C299E171450660B008EBE23 /* OTSend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTSend.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +58,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C299E0A14506108008EBE23 /* SystemConfiguration.framework in Frameworks */,
+				4C299E0814506102008EBE23 /* libz.dylib in Frameworks */,
+				4C299E05145060F7008EBE23 /* CoreLocation.framework in Frameworks */,
 				4C299DDD14505B7C008EBE23 /* UIKit.framework in Frameworks */,
 				4C299DDF14505B7C008EBE23 /* Foundation.framework in Frameworks */,
 				4C299DE114505B7C008EBE23 /* CoreGraphics.framework in Frameworks */,
@@ -52,7 +73,10 @@
 		4C299DCD14505B7C008EBE23 = {
 			isa = PBXGroup;
 			children = (
-				4C299DE214505B7C008EBE23 /* OTExample */,
+				4C299E0914506108008EBE23 /* SystemConfiguration.framework */,
+				4C299E0714506102008EBE23 /* libz.dylib */,
+				4C299E04145060F7008EBE23 /* CoreLocation.framework */,
+				4C299DE214505B7C008EBE23 /* Classes */,
 				4C299DDB14505B7C008EBE23 /* Frameworks */,
 				4C299DD914505B7C008EBE23 /* Products */,
 			);
@@ -76,7 +100,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4C299DE214505B7C008EBE23 /* OTExample */ = {
+		4C299DE214505B7C008EBE23 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
 				4C299DEB14505B7C008EBE23 /* OTExampleAppDelegate.h */,
@@ -84,9 +108,11 @@
 				4C299DEE14505B7C008EBE23 /* MainWindow.xib */,
 				4C299DF114505B7C008EBE23 /* OTExampleViewController.h */,
 				4C299DF214505B7C008EBE23 /* OTExampleViewController.m */,
+				4C299E0F1450660B008EBE23 /* OTLibrary */,
 				4C299DF414505B7C008EBE23 /* OTExampleViewController.xib */,
 				4C299DE314505B7C008EBE23 /* Supporting Files */,
 			);
+			name = Classes;
 			path = OTExample;
 			sourceTree = "<group>";
 		};
@@ -100,6 +126,21 @@
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
+		};
+		4C299E0F1450660B008EBE23 /* OTLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				4C299E101450660B008EBE23 /* OTDataSockets.h */,
+				4C299E111450660B008EBE23 /* OTDataSockets.m */,
+				4C299E121450660B008EBE23 /* OTFileUtils.h */,
+				4C299E131450660B008EBE23 /* OTFileUtils.m */,
+				4C299E141450660B008EBE23 /* OTLogService.h */,
+				4C299E151450660B008EBE23 /* OTLogService.m */,
+				4C299E161450660B008EBE23 /* OTSend.h */,
+				4C299E171450660B008EBE23 /* OTSend.m */,
+			);
+			path = OTLibrary;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -164,6 +205,10 @@
 				4C299DE914505B7C008EBE23 /* main.m in Sources */,
 				4C299DED14505B7C008EBE23 /* OTExampleAppDelegate.m in Sources */,
 				4C299DF314505B7C008EBE23 /* OTExampleViewController.m in Sources */,
+				4C299E181450660B008EBE23 /* OTDataSockets.m in Sources */,
+				4C299E191450660B008EBE23 /* OTFileUtils.m in Sources */,
+				4C299E1A1450660B008EBE23 /* OTLogService.m in Sources */,
+				4C299E1B1450660B008EBE23 /* OTSend.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +326,7 @@
 				4C299DFB14505B7C008EBE23 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
