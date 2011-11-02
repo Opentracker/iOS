@@ -330,7 +330,7 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
     [keyValuePairs setObject:event forKey:@"ti"];
     [keyValuePairs setObject:[OTDataSockets networkType] forKey:@"connection"];
     //TODO : make appname static string assigned using init
-    [keyValuePairs setObject:[NSString stringWithFormat:@"http://android.opentracker.net/%@/%@",appname,[event stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
+    [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[event stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
     @try {
         [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
         [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
@@ -455,7 +455,7 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
         
         NSString *gzippedFile = [self compress:@"fileToSend"];
         double time1 = [[NSDate date] timeIntervalSince1970];
-        NSString *url = @"http://log-test.opentracker.net/api/send_info_android/upload_file.jsp";
+        NSString *url = @"http://upload.opentracker.net/api/upload/upload.jsp";
         BOOL response  = [OTSend uploadFile:gzippedFile toServer:url];
         double time2 = [[NSDate date] timeIntervalSince1970];
         if (response) {
