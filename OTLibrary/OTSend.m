@@ -76,7 +76,7 @@
 
 +(BOOL) uploadFile:(NSString*) fileToSend toServer:(NSString*) uploadServer {
     NSLog(@"uploadFile");
-    NSString* newFileName = [NSString stringWithFormat:@"%@%@.gz",[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""], [self UUID]];
+    NSString* newFileName = [NSString stringWithFormat:@"%@.%@.gz",[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""], [self UUID]];
     NSLog(@"new filename: %@", newFileName);
     //string data
     // see uploading file : http://stackoverflow.com/questions/2229002/how-to-send-file-along-some-post-variables-with-objective-c-iphone-sdk
@@ -91,7 +91,7 @@
     //NSLog(@"data to post:%@", dataToPost);
     
     //request
-    NSString *url = uploadServer ; // url: @"http://log-test.opentracker.net/api/send_info_android/upload_file.jsp";
+    NSString *url = uploadServer ; // url: @"http://upload.opentracker.net/api/upload/upload.jsp";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSHTTPURLResponse *response = nil;
     [request setHTTPMethod:@"POST"];
