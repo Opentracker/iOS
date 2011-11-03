@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface OTExampleViewController : UIViewController{
-    IBOutlet UISlider *slider;
+    UILabel *sliderLabel;
+    IBOutlet UISwitch *mySwitch;
 }
+@property (nonatomic,retain) IBOutlet UILabel *sliderLabel;
 
+-(IBAction) sliderChanged:(id) sender;
 -(IBAction)clickedButton :(id)sender;
--(IBAction)movedSlider:(id)sender;
+-(IBAction)switchMoved:(id)sender;
 @end
