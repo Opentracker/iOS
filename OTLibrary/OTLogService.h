@@ -24,8 +24,10 @@
 @interface OTLogService : NSObject {
     BOOL isSessionStarted ;
     NSString *appname ;
+    //NSString *network ; 
 }
 @property (nonatomic, retain) NSString *appname ;
+//@property (nonatomic, retain) NSString *network ;
 
 /*!
  @method sharedOTLogService
@@ -43,6 +45,19 @@
  @param the name of the application registered at www.opentracker.net
  */
 -(void) onLaunch : (NSString*) applicationName;
+
+/*!
+ @method setDirectSend
+ @abstract Sets if the data is sent directly to the log service (directSend = true).
+ The default behavior is to send the event data directly if the device is
+ connected to the Internet via WiFi (larger bandwidth). If the device is
+ not connected via WiFi the data will be sent to a file which is then sent
+ to the log service at a later time. This helps save bandwidth and helps
+ with network performance.
+ @param directSend: If log service should sent event data directly, indifferent of
+ the connection.
+ */
++(void) setDirectSend : (BOOL) directSendParam ; 
 
 /*!
  @method registerSessionEvent
@@ -123,6 +138,7 @@ Any events being sent after this method being called
  @param dataDictionary which holds the key value pairs.
  */
 -(void) appendDataToFile : (NSMutableDictionary*) dataDictionary;
+
 
 
 @end
