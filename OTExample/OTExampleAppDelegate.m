@@ -20,7 +20,10 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
-    [[OTLogService sharedOTLogService] onLaunch:@"testApp"];
+    [[OTLogService sharedOTLogService] onLaunch:@"your-registered-app-name"];
+    // to test things real-time always send data directly to logging service
+    // make sure to comment this out if you are not testing
+    [OTLogService setDirectSend:YES];
     [[OTLogService sharedOTLogService] sendEvent:@"start session" ];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
@@ -37,6 +40,7 @@
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
+    [[OTLogService sharedOTLogService] sendEvent:@"application entered background" ];
     [[OTLogService sharedOTLogService] onEnteringBackground ];
     /*
      Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
