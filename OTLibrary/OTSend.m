@@ -45,28 +45,42 @@
     return responseDataString;
 }
 +(NSString*) send: (NSMutableDictionary*) keyValuePairs {
-    NSLog(@"send");
-    NSString* url = @"http://log.opentracker.net/";
+    NSLog(@"send:keyValuePairs");
+    NSString* url = @"http://log.opentracker.net/?";
     for (id key in keyValuePairs) {
         NSString *value = [keyValuePairs objectForKey:key];
         url = [NSString stringWithFormat:@"%@%@=%@&", url, [self urlEncoded:key] , [self urlEncoded:value]];
     }
+    NSLog(@"The url to be sent: %@", url);
     
     NSURLRequest *theRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:url]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:60.0];
     NSHTTPURLResponse *response = nil;
     
     NSString *responseDataString =nil;
+    BOOL isSuccessful = NO;
+
     
+    NSString *error = nil;
     @try {
-    NSData *responseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse: response error:nil];
-    
-    responseDataString = [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
+         NSData *responseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse: response error:&error];
+        responseDataString = [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
+        isSuccessful = YES;
     }
     @catch (NSException *exception) {
+       NSLog(@"send: keyValuePairs, connection failed.Exception thrown.");
+        responseDataString = nil;
+        isSuccessful = NO;
+    }
+    
+    //if and error is encountered on upload
+    if (error) {
         NSLog(@"send: keyValuePairs, connection failed");
         responseDataString = nil;
+        isSuccessful = NO;
     }
+    
+    return responseDataString;
     
     NSLog(@"Response from opentracker: %@", responseDataString);
     //NSString* encodedData = [self urlEncoding];
@@ -91,7 +105,7 @@
     //NSLog(@"data to post:%@", dataToPost);
     
     //request
-    NSString *url = uploadServer ; // url: @"http://upload.opentracker.net/api/upload/upload.jsp";
+    NSString *url = uploadServer ; // url: @"http://upload.opentracker.net/upload/upload.jsp";
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
     NSHTTPURLResponse *response = nil;
     [request setHTTPMethod:@"POST"];
