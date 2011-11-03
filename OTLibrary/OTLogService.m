@@ -16,8 +16,10 @@
 
 @implementation OTLogService
 static OTLogService *sharedOtagent = nil;
-static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
+static int sessionLapseTimeMs= 1000*60*30; //TODO,testing
+static bool directSend = NO; 
 @synthesize appname;
+//@synthesize network;
 
 
 - (id)init
@@ -26,6 +28,7 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
     if (self) {
         // Initialization code here.
         isSessionStarted = NO;
+       // network = [OTDataSockets networkType]; 
     }
     
     
@@ -44,6 +47,11 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
 	return sharedOtagent;
 }
 
+
++(void) setDirectSend:(BOOL)directSendParam {
+    directSend = directSendParam; 
+}
+
 -(void) onLaunch : (NSString*) applicationName {
     NSLog(@"onLaunch");    
     self.appname = applicationName;
@@ -58,6 +66,9 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
     isSessionStarted = NO;
     sharedOtagent = nil;
 }
+
+
+
 
 -(int) registerSessionEvent {
     NSLog(@"registerSessionEvent");
@@ -328,25 +339,13 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
     //TODO : make appname static string assigned using init
     [keyValuePairs setObject:appname forKey:@"si"];
     [keyValuePairs setObject:event forKey:@"ti"];
-    [keyValuePairs setObject:[OTDataSockets networkType] forKey:@"connection"];
     //TODO : make appname static string assigned using init
     [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[event stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
-    @try {
-        [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
-        [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
-    } @catch (NSException *e) {
-       NSLog(@"Exception while reading to ots/ otui: %@", [e reason]);
-        NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-        [logDictionary setObject:@"errors" forKey:@"si"]; // log to error appName
-        [logDictionary setObject:@"Exception while reading to ots/ otui" forKey:@"message"];
-        [logDictionary setObject:[e reason] forKey:@"reason"];
-        [OTSend send:logDictionary];
-        [logDictionary  release];
-    }
     if (eventCount == 1) {
         [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
         [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
         [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"version"];
+        [keyValuePairs setObject:[OTDataSockets networkType] forKey:@"connection"];
         //[keyValuePairs setObject:[OTDataSockets ipAddress] forKey:@"ip"];
     }
     
@@ -354,25 +353,30 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
     NSMutableDictionary *keyValuePairsMerged =[[NSMutableDictionary alloc] init];
     
     if (appendSessionStateData) {
-       NSMutableDictionary *dataFiles = nil;
         @try {
-            //TODO make gtSessionStateDataPairs
-            //dataFiles = otFileUtil.getSessionStateDataPairs();
+            [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
+            [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
         } @catch (NSException *e) {
-            NSLog(@"Exception while getting fileName data pairs");
+            NSLog(@"Exception while reading to ots/ otui: %@", [e reason]);
             NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
             [logDictionary setObject:@"errors" forKey:@"si"]; // log to error appName
-            [logDictionary setObject:[e reason] forKey:@"message"];
+            [logDictionary setObject:@"Exception while reading to ots/ otui" forKey:@"message"];
+            [logDictionary setObject:[e reason] forKey:@"reason"];
             [OTSend send:logDictionary];
             [logDictionary  release];
         }
-        if (dataFiles != nil)
-            [keyValuePairsMerged addEntriesFromDictionary:dataFiles];
     }
     if (keyValuePairs != nil)
     [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
+    
     @try {
-        [self appendDataToFile:keyValuePairsMerged];
+        if ([OTDataSockets networkType]==@"wifi") {
+            [OTSend send:keyValuePairsMerged];
+        } else if (directSend) {
+            [OTSend send:keyValuePairsMerged];
+        } else {
+            [self appendDataToFile:keyValuePairsMerged];
+        }
     } @catch (NSException *e) {
         NSLog(@"Exception while appending data to file: %@", [e reason]);
         NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
@@ -381,20 +385,32 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
         [OTSend send:logDictionary];
         [logDictionary  release];
     }
+
 }
 
 -(void) sendEventDictionary :(NSMutableDictionary *)keyValuePairs addSessionState:(BOOL)appendSessionStateData {
      NSLog(@"sendEventDictionary(%@)" , appendSessionStateData ? @"YES" : @"NO");
+     
+    int eventCount = [self registerSessionEvent];
     
     // also add any session state data
     NSMutableDictionary *keyValuePairsMerged =[[NSMutableDictionary alloc] init];
     [keyValuePairsMerged setObject:appname forKey:@"si"];
+    // ti is default title tag
+    if ([keyValuePairs objectForKey:@"ti"] == nil)
+        if ([keyValuePairs objectForKey:@"title"] == nil) {
+            [keyValuePairs setObject:@"[No title]" forKey:@"ti"];
+        } else {
+            [keyValuePairs setObject:[keyValuePairs objectForKey:@"title"] forKey:@"ti"];
+            [keyValuePairs removeObjectForKey:@"title"];
+        }
+
     
      if (appendSessionStateData) {
-            NSMutableDictionary *dataFiles = nil;
             @try {
                 //TODO make gtSessionStateDataPairs
-                //dataFiles = otFileUtil.getSessionStateDataPairs();
+                [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
+                [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
             } @catch (NSException *e) {
                 NSLog(@"Exception while getting fileName data pairs");
                 NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
@@ -403,13 +419,17 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
                 [OTSend send:logDictionary];
                 [logDictionary  release];
             }
-         if (dataFiles != nil)
-             [keyValuePairsMerged addEntriesFromDictionary:dataFiles];
      }
     if (keyValuePairs != nil)
         [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
     @try {
-        [self appendDataToFile:keyValuePairsMerged];
+        if ([OTDataSockets networkType]==@"wifi") { 
+            [OTSend send:keyValuePairsMerged];
+        } else if (directSend) {
+            [OTSend send:keyValuePairsMerged];
+        } else {
+            [self appendDataToFile:keyValuePairsMerged];
+        }
     } @catch (NSException *e) {
         NSLog(@"Exception while appending data to file: %@", [e reason]);
         NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
@@ -455,7 +475,7 @@ static int sessionLapseTimeMs= 30000; //TODO 30*1000 after testing
         
         NSString *gzippedFile = [self compress:@"fileToSend"];
         double time1 = [[NSDate date] timeIntervalSince1970];
-        NSString *url = @"http://upload.opentracker.net/api/upload/upload.jsp";
+        NSString *url = @"http://upload.opentracker.net/upload/upload.jsp";
         BOOL response  = [OTSend uploadFile:gzippedFile toServer:url];
         double time2 = [[NSDate date] timeIntervalSince1970];
         if (response) {
