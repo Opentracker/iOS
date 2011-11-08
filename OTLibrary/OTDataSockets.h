@@ -69,46 +69,91 @@ typedef enum {
     ReachableViaWWAN
 } NetworkStatus;
 #define kReachabilityChangedNotification @"kNetworkReachabilityChangedNotification"
-@interface OTDataSockets : NSObject<CLLocationManagerDelegate> {
-    //CLLocationManager *locationManager;
+@interface OTDataSockets : NSObject<CLLocationManagerDelegate> 
+{
     BOOL localWiFiRef;
     SCNetworkReachabilityRef reachabilityRef;
 }
-@property (nonatomic,retain) CLLocationManager *locationManager;
+
+/*!
+ * @method ipAddress
+ * @abstract Gets the string for ipAddress.
+ * @return The ipAddress as a string 
+ */
 
 +(NSString*) ipAddress ; 
+
+/*!
+ * @method screenWidth
+ * @abstract Gets the string for current screen Width.
+ * @return The current screen Width as a string 
+ */
 +(NSString*) screenWidth ; 
+
+/*!
+ * @method screenHeight
+ * @abstract Gets the string for current screen Height.
+ * @return The current screen Height as a string 
+ */
 +(NSString*) screenHeight ;
 
-
-//reachabilityWithAddress- Use to check the reachability of a particular IP address. 
+/*!
+ * @method reachabilityWithAddress
+ * @abstract Use to check the reachability of a particular IP address. 
+ * @return An object of the class OTDataSockets
+ */
 + (OTDataSockets*) reachabilityWithAddress: (const struct sockaddr_in*) hostAddress;
 
-//reachabilityForInternetConnection- checks whether the default route is available.  
-//  Should be used by applications that do not connect to a particular host
+/*!
+ * @method reachabilityForInternetConnection
+ * @abstract checks whether the default route is available.  
+ Should be used by applications that do not connect to a particular host 
+ * @return An object of the class OTDataSockets
+ */  
 + (OTDataSockets*) reachabilityForInternetConnection;
+
+/*!
+ * @method currentReachabilityStatus
+ * @abstract Use to check the current reachability status of a particular IP address. 
+ * @return	NotReachable variable if no reachability found
+ ReachableViaWiFi variable if the device is using WIFI for network connection
+ ReachableViaWWAN variable if the device is using WWAN for network connection 
+ */
 - (NetworkStatus) currentReachabilityStatus;
+
+/*!
+ * @method localWiFiStatusForFlags
+ * @abstract Use to get NetworkStatus flag for local WIFI status
+ * @return BOOL based on the local WiFi Status
+ */
 - (NetworkStatus) localWiFiStatusForFlags: (SCNetworkReachabilityFlags) flags;
+
+/*!
+ * @method networkStatusForFlags
+ * @abstract Use to get NetworkStatus flag 
+ * @return BOOL based on NotReachable or ReachableViaWiFi or ReachableViaWWAN
+ */
 - (NetworkStatus) networkStatusForFlags: (SCNetworkReachabilityFlags) flags;
 
 /*!
  * @method networkType
  * @abstract Gets the string for the type of network being used
- * @return wifi , wlan or no netowrk depending on the connection.
+ * @return wifi , wlan or no network depending on the network connection.
  */
 +(NSString*) networkType ;
+
 /*!
  * @method appVersion
  * @abstract Gets the pretty string for this application's version.
  * @return The application's version as a pretty string
  */
 +(NSString*) appVersion ; 
-+(NSString*) getLocation ; //not necessary
+
 /*!
  * @method locationCoordinates
  * @abstract Gets the pretty string for the latitude
- * and longitude coordinates of the current location.
- * @return latitude and longitude string sepearted by a ','
+ *			 and longitude coordinates of the current location.
+ * @return latitude and longitude string seperated by a ','
  */
 +(NSString*) locationCoordinates;
 
