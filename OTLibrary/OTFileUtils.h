@@ -1,5 +1,5 @@
 //
-//  OTUpload.h
+//  OTFileUtils.h
 //  opentracker
 //
 //  Created by Pavitra on 9/8/11.
@@ -14,49 +14,53 @@
  @version 1.0
  */
 @interface OTFileUtils : NSObject
+
 /*!
  * @method makeFile
- * @abstract Makes an empty file in the default Documents directory
- * @param fileName The file name to make
+ * @abstract Creates/Makes an empty file in the default Documents directory with the file name specified
+ * @param fileName The file name to Create/Makes the directory
  */
 +(void) makeFile : (NSString*) filename;
 
 /*!
  * @method writeFile
- * @abstract Writes the writeString to the fileName given in 
- * the Documents directory.
+ * @abstract Writes the writeString to the fileName given in the Documents directory.
  * @param fileName The file name write to
- * @param str The string to write
+ * @param str The string to write in the file 
  */
 +(void) writeFile: (NSString*) filename withString: (NSString*) str;
 
 /*!
  * @method removeFile
- * @abstract Method to remove a file.
+ * @abstract Method to remove a file with the name fileName present in the Documents directory 
  * @param fileName The file name to remove from the Documents Directory
  */
 +(void) removeFile: (NSString*) filename;
 
 /*!
  * @method readFile
- * @abstract Method to read a file and get its contents as a string in the Documents
- * directory 
+ * @abstract Method to read a file with the name fileName in the Documents directory 
+ *			 and get its contents as a string 
  * @param filename The file name to read
+ * @returns string which contains the contents present in the file
  */
 +(NSString*) readFile : (NSString*) filename;
 
 /*!
  * @method appendToFile
- * @abstract Method to append a string to a file.
- If file does not exist, it is created and string is written.
+ * @abstract Method to append a string to a file with the name fileName.
+ If file does not exist, it is created and string is written in the file.
  * @param fileName The file name to append to
  * @param writeString The string to be written
  */
 +(void) appendToFile:(NSString *)filename writeString:(NSString *) writeString ;
+            
 /*!
  * @method compressFile
- * @abstract Method to compress a file with a GZIPOutputStream
+ * @abstract Method to compress a file with a GZIPOutputStream with the name fileName present in the Documents directory
  * @param filename, The file name to compress
+ * @returns The name of the compressed file as a string.
  */
 +(NSString*) compressFile : (NSString*) filename ;
 @end
+    
