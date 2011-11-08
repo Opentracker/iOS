@@ -69,10 +69,10 @@ typedef enum {
     ReachableViaWWAN
 } NetworkStatus;
 #define kReachabilityChangedNotification @"kNetworkReachabilityChangedNotification"
-@interface OTDataSockets : NSObject {
-      CLLocationManager *locationManager;
-      BOOL localWiFiRef;
-      SCNetworkReachabilityRef reachabilityRef;
+@interface OTDataSockets : NSObject<CLLocationManagerDelegate> {
+    //CLLocationManager *locationManager;
+    BOOL localWiFiRef;
+    SCNetworkReachabilityRef reachabilityRef;
 }
 @property (nonatomic,retain) CLLocationManager *locationManager;
 
