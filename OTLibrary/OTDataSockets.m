@@ -17,6 +17,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 #define kShouldPrintReachabilityFlags 1
 
+// Global
+
 static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char* comment)
 {
 #if kShouldPrintReachabilityFlags
@@ -51,48 +53,52 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     return self;
 }
 
+#pragma mark IP Address
+
 +(NSString*) ipAddress {
-    //*
-	char iphone_ip[255];
-	strcpy(iphone_ip,"127.0.0.1"); // if everything fails
-	NSHost* myhost =[NSHost currentHost];
-	if (myhost)
-	{
-		NSString *ad = [myhost address];
-		if (ad)
-			strcpy(iphone_ip,[ad cStringUsingEncoding: NSISOLatin1StringEncoding]);
-	}
-	return [NSString stringWithFormat:@"%s",iphone_ip]; //*/
+    /*
+     char iphone_ip[255];
+     strcpy(iphone_ip,"127.0.0.1"); // if everything fails
+     NSHost* myhost =[NSHost currentHost];
+     if (myhost)
+     {
+     NSString *ad = [myhost address];
+     if (ad)
+     strcpy(iphone_ip,[ad cStringUsingEncoding: NSISOLatin1StringEncoding]);
+     }
+     return [NSString stringWithFormat:@"%s",iphone_ip]; */
     NSString *address = @"error";
-    //*
-    struct ifaddrs *interfaces = NULL;
-    struct ifaddrs *temp_addr = NULL;
-    int success = 0;
-    // retrieve the current interfaces - returns 0 on success
-    success = getifaddrs(&interfaces);
-    if (success == 0)
-    {
-        // Loop through linked list of interfaces
-        temp_addr = interfaces;
-        while(temp_addr != NULL)
-        {
-            if(temp_addr->ifa_addr->sa_family == AF_INET)
-            {
-                // Check if interface is en0 which is the wifi connection on the iPhone
-                if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
-                {
-                    // Get NSString from C String
-                    address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
-                }
-            }
-            temp_addr = temp_addr->ifa_next;
-        }
-    }
-    // Free memory
-    freeifaddrs(interfaces);//*/
+    /*
+	 struct ifaddrs *interfaces = NULL;
+     struct ifaddrs *temp_addr = NULL;
+     int success = 0;
+     // retrieve the current interfaces - returns 0 on success
+     success = getifaddrs(&interfaces);
+     if (success == 0)
+     {
+     // Loop through linked list of interfaces
+     temp_addr = interfaces;
+     while(temp_addr != NULL)
+     {
+     if(temp_addr->ifa_addr->sa_family == AF_INET)
+     {
+     // Check if interface is en0 which is the wifi connection on the iPhone
+     if([[NSString stringWithUTF8String:temp_addr->ifa_name] isEqualToString:@"en0"])
+     {
+     // Get NSString from C String
+     address = [NSString stringWithUTF8String:inet_ntoa(((struct sockaddr_in *)temp_addr->ifa_addr)->sin_addr)];
+     }
+     }
+     temp_addr = temp_addr->ifa_next;
+     }
+     }
+     // Free memory
+     freeifaddrs(interfaces);*/
 	NSLog(@"address %@",address);
     return address;
 }
+
+#pragma mark Network Reachability With Address
 
 + (OTDataSockets*) reachabilityWithAddress: (const struct sockaddr_in*) hostAddress;
 {
@@ -110,6 +116,8 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     return retVal;
 }
 
+#pragma mark  Network Reachability For Internet Connection
+
 + (OTDataSockets*) reachabilityForInternetConnection;
 {
     struct sockaddr_in zeroAddress;
@@ -118,6 +126,8 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     zeroAddress.sin_family = AF_INET;
     return [self reachabilityWithAddress: &zeroAddress];
 }
+
+#pragma mark Current Network Reachability Status
 
 - (NetworkStatus) currentReachabilityStatus
 {
@@ -150,6 +160,8 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     }
     return retVal;
 }
+
+#pragma mark Network Status For Flags
 
 - (NetworkStatus) networkStatusForFlags: (SCNetworkReachabilityFlags) flags
 {
@@ -192,27 +204,27 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     return retVal;
 }
 
-
+#pragma mark Network Type
 
 +(NSString*) networkType {
     //type of internet connection :  http://developer.apple.com/library/ios/#samplecode/Reachability/Introduction/Intro.html
     OTDataSockets* curReach = [OTDataSockets reachabilityForInternetConnection];
     
     NetworkStatus netStatus = [curReach currentReachabilityStatus] ;
-    NSString* statusString= @"";
+    NSString* statusString= @"no network";
     
     switch (netStatus)
     {
         case NotReachable:
         {
-            statusString = @"access not vvailable";
+            statusString = @"no network";
             //NSLog(statusString); 
             break;
         }
             
         case ReachableViaWWAN:
         {
-            statusString = @"WWAN";
+            statusString = @"mobile";
             //NSLog(statusString);
             break;
         }
@@ -226,11 +238,15 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     return statusString;
 }
 
+#pragma mark Screen Width
+
 +(NSString*) screenWidth {
     CGRect cgRect =[[UIScreen mainScreen] bounds];
     CGSize cgSize = cgRect.size;
     return [NSString stringWithFormat:@"%3.0f",  cgSize.width];
 }
+
+#pragma mark Screen Height
 
 +(NSString*) screenHeight {
     CGRect cgRect =[[UIScreen mainScreen] bounds];
@@ -238,16 +254,31 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     return [NSString stringWithFormat:@"%3.0f",  cgSize.height];
 }
 
+#pragma mark Application Version
+/*
+ This method will returns you the current app version
+ */
 +(NSString*) appVersion {
     //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/17740-how-get-app-version-number.html
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
 }
 
+#pragma mark Device
+/*
+ This method will returns you the current device
+ Whether the application in on iPhone or iPod Touch or iPad
+ */
+
 +(NSString*) device {
-    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/17740-how-get-app-version-number.html	
+    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/4960-how-identify-device-user.html
     return [[UIDevice currentDevice] systemName];
 }
 
+#pragma mark Current Location Coordinates
+/*
+ This Method will return you the current location coordinates in string.
+ For this we have used CLLocationManager.
+ */
 + (NSString*) locationCoordinates { 
     
     // locationManager update as location
@@ -255,6 +286,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     locationManager.delegate = self; 
     locationManager.desiredAccuracy = kCLLocationAccuracyBest; 
     locationManager.distanceFilter = kCLDistanceFilterNone; 
+	//start update location will starts finding the location coordinates and updates 
     [locationManager startUpdatingLocation];
     
     CLLocation *location = [locationManager location];
