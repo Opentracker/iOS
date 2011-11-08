@@ -346,6 +346,7 @@ static bool directSend = NO;
         [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
         [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"version"];
         [keyValuePairs setObject:[OTDataSockets networkType] forKey:@"connection"];
+        [keyValuePairs setObject:[OTDataSockets locationCoordinates] forKey:@"location"];
         //[keyValuePairs setObject:[OTDataSockets ipAddress] forKey:@"ip"];
     }
     
