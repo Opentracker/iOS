@@ -1,5 +1,5 @@
 //
-//  OTUpload.m
+//  OTFileUtils.m
 //  opentracker
 //
 //  Created by Pavitra on 9/8/11.
@@ -20,19 +20,24 @@
     
     return self;
 }
+#pragma mark Make File
 
-//returns YES, if file is created or already present, else NO
 +(void) makeFile : (NSString*) filename {
     NSString *documentsDirectory = [NSHomeDirectory() 
                                     stringByAppendingPathComponent:@"Documents"];
+    // File we want to create in the documents directory with the given filename
     
-    // File we want to create in the documents directory 
-    NSString *filePath = [documentsDirectory 
-                          stringByAppendingPathComponent:filename];
+    [documentsDirectory stringByAppendingPathComponent:filename];
+    //  NSString *filePath = [documentsDirectory stringByAppendingPathComponent:filename];
     return ;
-    //testing svn 
 }
 
+
+#pragma mark Write File
+/*
+ writeFile takes the input parameters "filename" and "withString"
+ Search for the file name given, if found writes the string content in the file 
+ */
 +(void) writeFile: (NSString*) filename withString: (NSString*) str{
     // For error information
     NSError *error;
@@ -56,19 +61,24 @@
     [str writeToFile:filePath atomically:YES 
             encoding:NSUTF8StringEncoding error:&error];
     
-    // Show contents of Documents directory
+    // Show contents of Documents directory    
     NSLog(@"Documents directory: %@",
           [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
     NSLog(@"File path:%@", filePath);
-    
-    
-    
 }
 
+#pragma mark Remove File
+/*
+ removeFile takes the input parameter "fileName",
+ search for the file in the document directory and removes the file if found
+ */
+
 +(void) removeFile: (NSString*) filename {
+    // For error information
     NSError *error;
-    
+    // Create file manager
     NSFileManager *fileMgr = [NSFileManager defaultManager];
+    // Point to Document directory
     NSString *documentsDirectory = [NSHomeDirectory() 
                                     stringByAppendingPathComponent:@"Documents"];
     
@@ -80,16 +90,28 @@
         NSLog(@"Unable to delete file: %@", [error localizedDescription]);
     
     // Show contents of Documents directory
+    
     NSLog(@"Documents directory: %@",
           [fileMgr contentsOfDirectoryAtPath:documentsDirectory error:&error]);
 }
 
+#pragma mark Read File
+/*
+ readFile takes the input parameter "filename"
+ Search for the file in the document directory
+ and if file found, returns the contents of the file in string.
+ */
 +(NSString*) readFile : (NSString*) filename {
+    
+    // For error information
     NSError *error;
+    // Point to Document directory
     NSString *documentsDirectory = [NSHomeDirectory() 
                                     stringByAppendingPathComponent:@"Documents"];
+    //Gets the path of the file 
     NSString *filePath = [documentsDirectory 
                           stringByAppendingPathComponent:filename ];
+    //Gets the contents of the file 
     NSString *myFileContents = [NSString stringWithContentsOfFile:filePath
                                                          encoding:NSUTF8StringEncoding
                                                             error:&error];
@@ -97,7 +119,13 @@
     return myFileContents;
 }
 
+#pragma mark Append to File
 
+/*
+ appentToFile take the input parameters "filename" and "writeStrin",
+ search for the file in the document directory and if the file found 
+ appends the content in the writeString to the file.
+ */
 
 //see how to append string to file : http://www.iphonedevsdk.com/forum/iphone-sdk-development/50269-using-writetofile-can-i-add-records-file.html
 +(void) appendToFile:(NSString *)filename writeString:(NSString *) writeString {
@@ -131,9 +159,9 @@
         
     } else { // the file already exists, so we should append the text to the end
         // get a handle to the file
-        NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];		
+        NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:filePath];        
         // move to the end of the file
-        [fileHandle seekToEndOfFile];		
+        [fileHandle seekToEndOfFile];        
         // convert the string to an NSData object
         NSData *textData = [writeString dataUsingEncoding:NSUTF8StringEncoding];
         // write the data to the end of the file
@@ -143,9 +171,15 @@
     }
 }
 
+#pragma mark Compress File
+/*
+ compressFile takes the input parameter "filename"
+ Search for the file in the document directory and if the file found
+ it uses the GZIPOutputStream to compress the file.
+ */
 +(NSString*) compressFile : (NSString*) filename {
     NSLog(@"compressFile : %@", filename);
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    // NSFileManager *fileMgr = [NSFileManager defaultManager];
     
     // Point to Document directory
     NSString *documentsDirectory = [NSHomeDirectory() 
@@ -156,32 +190,32 @@
     
     NSString *filePath = [documentsDirectory 
                           stringByAppendingPathComponent:filename];
-
-	FILE *fin = nil;
-	gzFile *fout = nil;
     
-	fin = fopen([filePath UTF8String], "rb");
-	if (fin == nil) {
-		[NSException raise:@"File open error" format:@"could not open file %@ for reading.", filePath];
-	}
-	fout = gzopen([[filePath stringByAppendingString:@".gz"] UTF8String], "w");
-	if (fout == nil) {
-		fclose(fin);
-		[NSException raise:@"File open error" format:@"could not open file %@ for writing.", [filePath stringByAppendingString:@".gz"]];
-	}
-	char buf[255];
-	int len = 0;
-	while (!feof(fin) && (len = fread(buf, 1, sizeof(buf), fin)) && len > 0) {
-		if (gzwrite(fout, buf, len) <= 0) {
-			fclose(fin);
-			gzclose(fout);
-			[NSException raise:@"Gzip file failure" format:@"could not write to file %@.", [filename stringByAppendingString:@".gz"]];
-		}
-	}
-	gzclose(fout);
-	fclose(fin);
-	NSLog(@"Gzipped %@ to %@", filename, [filename stringByAppendingString:@".gz"]);
-	return [filename stringByAppendingString:@".gz"];
+    FILE *fin = nil;
+    gzFile *fout = nil;
+    
+    fin = fopen([filePath UTF8String], "rb");
+    if (fin == nil) {
+        [NSException raise:@"File open error" format:@"could not open file %@ for reading.", filePath];
+    }
+    fout = gzopen([[filePath stringByAppendingString:@".gz"] UTF8String], "w");
+    if (fout == nil) {
+        fclose(fin);
+        [NSException raise:@"File open error" format:@"could not open file %@ for writing.", [filePath stringByAppendingString:@".gz"]];
+    }
+    char buf[255];
+    int len = 0;
+    while (!feof(fin) && (len = fread(buf, 1, sizeof(buf), fin)) && len > 0) {
+        if (gzwrite(fout, buf, len) <= 0) {
+            fclose(fin);
+            gzclose(fout);
+            [NSException raise:@"Gzip file failure" format:@"could not write to file %@.", [filename stringByAppendingString:@".gz"]];
+        }
+    }
+    gzclose(fout);
+    fclose(fin);
+    NSLog(@"Gzipped %@ to %@", filename, [filename stringByAppendingString:@".gz"]);
+    return [filename stringByAppendingString:@".gz"];
 }
 
 @end
