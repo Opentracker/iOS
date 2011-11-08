@@ -52,7 +52,8 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 }
 
 +(NSString*) ipAddress {
-    /*char iphone_ip[255];
+    //*
+	char iphone_ip[255];
 	strcpy(iphone_ip,"127.0.0.1"); // if everything fails
 	NSHost* myhost =[NSHost currentHost];
 	if (myhost)
@@ -61,9 +62,10 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 		if (ad)
 			strcpy(iphone_ip,[ad cStringUsingEncoding: NSISOLatin1StringEncoding]);
 	}
-	return [NSString stringWithFormat:@"%s",iphone_ip]; */
+	return [NSString stringWithFormat:@"%s",iphone_ip]; //*/
     NSString *address = @"error";
-    /*struct ifaddrs *interfaces = NULL;
+    //*
+    struct ifaddrs *interfaces = NULL;
     struct ifaddrs *temp_addr = NULL;
     int success = 0;
     // retrieve the current interfaces - returns 0 on success
@@ -87,7 +89,8 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
         }
     }
     // Free memory
-    freeifaddrs(interfaces);*/
+    freeifaddrs(interfaces);//*/
+	NSLog(@"address %@",address);
     return address;
 }
 
@@ -237,18 +240,18 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 
 +(NSString*) appVersion {
     //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/17740-how-get-app-version-number.html
-   return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
 }
 
 +(NSString*) device {
-    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/17740-how-get-app-version-number.html
+    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/17740-how-get-app-version-number.html	
     return [[UIDevice currentDevice] systemName];
 }
 
-- (NSString*) locationCoordinates { 
++ (NSString*) locationCoordinates { 
     
     // locationManager update as location
-    locationManager = [[CLLocationManager alloc] init];
+    CLLocationManager *locationManager = [[CLLocationManager alloc] init];
     locationManager.delegate = self; 
     locationManager.desiredAccuracy = kCLLocationAccuracyBest; 
     locationManager.distanceFilter = kCLDistanceFilterNone; 
@@ -268,6 +271,7 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     
     NSString *locationCoordinates = [NSString stringWithFormat:@"%@,%@",latitude, longitude];
     
+	NSLog(@"12345 locationCoordinates  %@",locationCoordinates);
     return locationCoordinates;
     
 }
