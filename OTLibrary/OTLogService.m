@@ -401,8 +401,10 @@ static bool directSend = NO;
     if ([keyValuePairs objectForKey:@"ti"] == nil)
         if ([keyValuePairs objectForKey:@"title"] == nil) {
             [keyValuePairs setObject:@"[No title]" forKey:@"ti"];
+            [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname, @"[No title]"] forKey:@"lc" ];
         } else {
             [keyValuePairs setObject:[keyValuePairs objectForKey:@"title"] forKey:@"ti"];
+            [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[[keyValuePairs objectForKey:@"title"] stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
             [keyValuePairs removeObjectForKey:@"title"];
         }
 
