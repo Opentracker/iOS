@@ -16,6 +16,7 @@
 
 @implementation OTLogService
 static OTLogService *sharedOtagent = nil;
+OTDataSockets *otdataSockets ; 
 static int sessionLapseTimeMs= 1000*60*30; //TODO,testing
 static bool directSend = NO; 
 @synthesize appname;
@@ -40,7 +41,7 @@ static bool directSend = NO;
 	@synchronized(self) {
 		if (sharedOtagent == nil) {
 			sharedOtagent = [[self alloc] init];
-            
+            otdataSockets = [[OTDataSockets alloc] init];
 		}
 	}
     
@@ -344,9 +345,16 @@ static bool directSend = NO;
     if (eventCount == 1) {
         [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
         [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
-        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"version"];
-        [keyValuePairs setObject:[OTDataSockets networkType] forKey:@"connection"];
-        [keyValuePairs setObject:[OTDataSockets locationCoordinates] forKey:@"location"];
+        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
+        [keyValuePairs setObject:[otdataSockets networkType] forKey:@"connection"];
+        [keyValuePairs setObject:[[UIDevice currentDevice] systemName] forKey:@"platform"];
+        [keyValuePairs setObject:[[UIDevice currentDevice] systemVersion] forKey:@"platform version"];
+        //if latitude and longitude value is 0,0 do not add it to the hashmap
+        NSString *location = [OTDataSockets locationCoordinates];
+        if(![ location isEqual:@"0.000000,0.000000"]) {
+            [keyValuePairs setObject:location forKey:@"location"];
+        }
+        
         //[keyValuePairs setObject:[OTDataSockets ipAddress] forKey:@"ip"];
     }
     
@@ -371,7 +379,7 @@ static bool directSend = NO;
     [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
     
     @try {
-        if ([OTDataSockets networkType]==@"wifi") {
+        if ([otdataSockets networkType]==@"wifi") {
             [OTSend send:keyValuePairsMerged];
         } else if (directSend) {
             [OTSend send:keyValuePairsMerged];
@@ -407,7 +415,20 @@ static bool directSend = NO;
             [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[[keyValuePairs objectForKey:@"title"] stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
             [keyValuePairs removeObjectForKey:@"title"];
         }
-
+    
+    if (eventCount == 1) {
+        [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
+        [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
+        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
+        [keyValuePairs setObject:[otdataSockets networkType] forKey:@"connection"];
+        [keyValuePairs setObject:[[UIDevice currentDevice] systemName] forKey:@"platform"];
+        [keyValuePairs setObject:[[UIDevice currentDevice] systemVersion] forKey:@"platform version"];
+        //if latitude and longitude value is 0,0 do not add it to the hashmap
+        NSString *location = [OTDataSockets locationCoordinates];
+        if(![ location isEqual:@"0.000000,0.000000"]) {
+            [keyValuePairs setObject:location forKey:@"location"];
+        }
+    }
     
      if (appendSessionStateData) {
             @try {
@@ -426,7 +447,7 @@ static bool directSend = NO;
     if (keyValuePairs != nil)
         [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
     @try {
-        if ([OTDataSockets networkType]==@"wifi") { 
+        if ([otdataSockets networkType]==@"wifi") { 
             [OTSend send:keyValuePairsMerged];
         } else if (directSend) {
             [OTSend send:keyValuePairsMerged];
