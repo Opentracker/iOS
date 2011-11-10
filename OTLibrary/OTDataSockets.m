@@ -41,11 +41,14 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 
 
 @implementation OTDataSockets
+@synthesize cacheType;
+static long EXPIRE_S =  60l;
 
 
 - (id)init
 {
     self = [super init];
+    cacheType = [[NSMutableDictionary alloc] init];
     if (self) {
         // Initialization code here.
     }
@@ -206,12 +209,16 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
 
 #pragma mark Network Type
 
-+(NSString*) networkType {
+-(NSString*) networkType {
+    if ([cacheType objectForKey:@"last modified time"]!= nil && (([[cacheType objectForKey:@"last modified time"] doubleValue]) > ([[NSDate date] timeIntervalSince1970]- EXPIRE_S)) ) {
+        return [cacheType objectForKey:@"networkType"];
+    }
+    
     //type of internet connection :  http://developer.apple.com/library/ios/#samplecode/Reachability/Introduction/Intro.html
     OTDataSockets* curReach = [OTDataSockets reachabilityForInternetConnection];
-    
     NetworkStatus netStatus = [curReach currentReachabilityStatus] ;
     NSString* statusString= @"no network";
+    
     
     switch (netStatus)
     {
@@ -235,7 +242,11 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
             break;
         }
     }
-    return statusString;
+    
+    [cacheType setObject:statusString forKey:@"networkType"];
+    [cacheType setObject:[NSString stringWithFormat:@"%.0f", [[NSDate date] timeIntervalSince1970]] forKey:@"last modified time"];
+
+    return [cacheType objectForKey:@"networkType"];
 }
 
 #pragma mark Screen Width
@@ -298,13 +309,14 @@ static void PrintReachabilityFlags(SCNetworkReachabilityFlags flags, const char*
     NSString *latitude = [NSString stringWithFormat:@"%f", coordinate.latitude]; 
     NSString *longitude = [NSString stringWithFormat:@"%f", coordinate.longitude];
     
-    //NSLog(@"dLatitude : %@", latitude); 
-    //NSLog(@"dLongitude : %@",longitude);
+
     
     NSString *locationCoordinates = [NSString stringWithFormat:@"%@,%@",latitude, longitude];
     
 	NSLog(@"12345 locationCoordinates  %@",locationCoordinates);
+        
     return locationCoordinates;
+    
     
 }
 @end
