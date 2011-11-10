@@ -73,8 +73,9 @@ typedef enum {
 {
     BOOL localWiFiRef;
     SCNetworkReachabilityRef reachabilityRef;
+    NSMutableDictionary *cacheType ; 
 }
-
+@property (nonatomic, retain) NSMutableDictionary *cacheType ; 
 /*!
  * @method ipAddress
  * @abstract Gets the string for ipAddress.
@@ -140,7 +141,7 @@ typedef enum {
  * @abstract Gets the string for the type of network being used
  * @return wifi , wlan or no network depending on the network connection.
  */
-+(NSString*) networkType ;
+- (NSString*) networkType ;
 
 /*!
  * @method appVersion
