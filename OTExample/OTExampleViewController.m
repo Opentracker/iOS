@@ -20,7 +20,7 @@
 -(IBAction)switchMoved:(id)sender{
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init ];
     [dictionary setObject:@"switch changed" forKey:@"title"];
-    [dictionary setObject:[[NSString alloc] initWithFormat:@"%@", [sender isOn] ? @"ON":@"OFF" ] forKey:@"value"];
+    [dictionary setObject:[[NSString alloc] initWithFormat:@"%@", [sender isOn] ? @"ON":@"OFF" ] forKey:@"custom defined switch value"];
     [[OTLogService sharedOTLogService]  sendEvent:dictionary ];
     [dictionary release];
 }
@@ -30,7 +30,7 @@
     int progressAsInt =(int)(slider.value);
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init ];
     [dictionary setObject:@"slider moved" forKey:@"title"];
-    [dictionary setObject:[[NSString alloc] initWithFormat:@"%d", progressAsInt ] forKey:@"value"];
+    [dictionary setObject:[[NSString alloc] initWithFormat:@"%d", progressAsInt ] forKey:@"custom defined slider value"];
     [[OTLogService sharedOTLogService]  sendEvent:dictionary ];
     [dictionary release];
 }
