@@ -117,9 +117,9 @@ typedef enum {
  * @method currentReachabilityStatus
  * @abstract Use to check the current reachability status of a particular IP address. 
  * @return	NotReachable variable if no reachability found
- ReachableViaWiFi variable if the device is using WIFI for network connection
- ReachableViaWWAN variable if the device is using WWAN for network connection 
- */
+ *          ReachableViaWiFi variable if the device is using WIFI for network connection
+ *          ReachableViaWWAN variable if the device is using WWAN for network connection 
+ */     
 - (NetworkStatus) currentReachabilityStatus;
 
 /*!
@@ -157,5 +157,26 @@ typedef enum {
  * @return latitude and longitude string seperated by a ','
  */
 +(NSString*) locationCoordinates;
-
+/*!
+ * @method platform
+ * @abstract Gets the string of the platform on which
+ *           the current device is running.
+ * @return platform name as a pretty string.
+ */
++(NSString*) platform;
+/*!
+ * @method platformVersion
+ * @abstract Gets the string of the platform version of
+ *           the current device is running.
+ * @return platform name as a pretty string.
+ */
++(NSString*) platformVersion;
+/*!
+ * @method device
+ * @abstract Gets the string of the model name of
+ *           the current device which is running.
+ * @return model name as a pretty string.
+ */
++(NSString*) device;
 @end
+    
