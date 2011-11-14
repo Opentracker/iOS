@@ -24,10 +24,8 @@
 @interface OTLogService : NSObject {
     BOOL isSessionStarted ;
     NSString *appname ;
-    //NSString *network ; 
 }
 @property (nonatomic, retain) NSString *appname ;
-//@property (nonatomic, retain) NSString *network ;
 
 /*!
  @method sharedOTLogService
@@ -72,13 +70,14 @@
  this data will be recorded and sent to www.opentracker.net.  
  @param description of the event or a set of key value pairs.
  */
--(void) sendEvent : (NSObject*) object ; 
+//-(void) sendEvent : (NSObject*) object ; 
+-(void) sendEvent : (id)object ; 
 
 /*!
  @method sendEventString
  @abstract Allows a session to register a particular event as having occurred,
  this data will be recorded and sent to www.opentracker.net.  
- @param event , description of the event.
+ @param event, description of the event.
  */
 -(void) sendEventString:(NSString *)event addSessionState:(BOOL) appendSessionStateData ;
 /*!
@@ -105,7 +104,7 @@
  @method onTerminate
  @abstract Closes the session.  This should be called in
  applicationWillTerminate.
-Any events being sent after this method being called 
+ Any events being sent after this method being called 
  will result in a new session.
  */
 -(void) onTerminate ; 
@@ -113,8 +112,8 @@ Any events being sent after this method being called
 /*!
  @method uploadCompressedFile
  @abstract uploads the compressed file to opentracker.net.
- This file contains all the data needed for tracking. It is called when paus
- Any events being sent after this method being called 
+ This file contains all the data needed for tracking. It is called when 
+ any events being sent after this method being called 
  will result in a new session.
  */
 -(void) uploadCompressedFile;
