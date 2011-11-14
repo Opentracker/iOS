@@ -237,7 +237,7 @@ static long EXPIRE_S =  60l;
         }
         case ReachableViaWiFi:
         {
-            statusString= @"wifi";
+            statusString= @"Wi-Fi";
             //NSLog(statusString);
             break;
         }
@@ -274,17 +274,6 @@ static long EXPIRE_S =  60l;
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
 }
 
-#pragma mark Device
-/*
- This method will returns you the current device
- Whether the application in on iPhone or iPod Touch or iPad
- */
-
-+(NSString*) device {
-    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/4960-how-identify-device-user.html
-    return [[UIDevice currentDevice] systemName];
-}
-
 #pragma mark Current Location Coordinates
 /*
  This Method will return you the current location coordinates in string.
@@ -294,14 +283,13 @@ static long EXPIRE_S =  60l;
     
     // locationManager update as location
     CLLocationManager *locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self; 
     locationManager.desiredAccuracy = kCLLocationAccuracyBest; 
     locationManager.distanceFilter = kCLDistanceFilterNone; 
+    locationManager.delegate = self;
 	//start update location will starts finding the location coordinates and updates 
     [locationManager startUpdatingLocation];
     
     CLLocation *location = [locationManager location];
-    
     
     // Configure the new event with information from the location
     CLLocationCoordinate2D coordinate = [location coordinate];
@@ -318,5 +306,30 @@ static long EXPIRE_S =  60l;
     return locationCoordinates;
     
     
+}
+#pragma mark Current Platform
+/*
+ This Method will return the Operating system of the current device
+ */
++(NSString*) platform {
+   return [[UIDevice currentDevice] systemName];
+}
+
+#pragma mark Current Platform Version
+/*
+ This Method will return the Operating system version of the current device
+ */
++(NSString*) platformVersion {
+    return [[UIDevice currentDevice] systemVersion];
+}
+
+#pragma mark Device
+/*
+ This method will return the current device
+ Whether the application in on iPhone or iPod Touch or iPad
+ */
++(NSString*) device {
+    //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/4960-how-identify-device-user.html
+    return [[UIDevice currentDevice] model];
 }
 @end
