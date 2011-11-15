@@ -381,19 +381,17 @@ static bool directSend = NO;
     //TODO : make appname static string assigned using init
     [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[event stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
     [keyValuePairs setObject:[otdataSockets networkType] forKey:@"connection"];
-    [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];
-    if (eventCount == 1) {		
-        [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
-        [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
-        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
-        [keyValuePairs setObject:[OTDataSockets platformVersion]  forKey:@"platform version"];
-        [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
-        //if latitude and longitude value is 0,0 do not add it to the hashmap
-        NSString *location = [OTDataSockets locationCoordinates];
-        if(![ location isEqual:@"0.000000,0.000000"]) {
-            [keyValuePairs setObject:location forKey:@"location"];
-        }
-	}
+    [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];	
+    [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
+    [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
+    [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
+    [keyValuePairs setObject:[OTDataSockets platformVersion]  forKey:@"platform version"];
+    [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
+    //if latitude and longitude value is 0,0 do not add it to the hashmap
+    NSString *location = [OTDataSockets locationCoordinates];
+    if(![ location isEqual:@"0.000000,0.000000"]) {
+        [keyValuePairs setObject:location forKey:@"location"];
+    }
     
     //also add any session state data
     NSMutableDictionary *keyValuePairsMerged =[[NSMutableDictionary alloc] init];
@@ -460,17 +458,15 @@ static bool directSend = NO;
         }
     [keyValuePairs setObject:[otdataSockets networkType] forKey: @"connection"];
     [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];
-    if (eventCount == 1) {
-        [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
-        [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
-        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app  version"];
-        [keyValuePairs setObject:[[UIDevice currentDevice] systemVersion]  forKey:@"platform version"];
-        [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
-        //if latitude and longitude value is 0,0 do not add it to the hashmap
-        NSString *location = [OTDataSockets locationCoordinates];
-        if(![ location isEqual:@"0.000000,0.000000"]) {
-            [keyValuePairs setObject:location forKey:@"location"];
-        }
+    [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
+    [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
+    [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
+    [keyValuePairs setObject:[[UIDevice currentDevice] systemVersion]  forKey:@"platform version"];
+    [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
+    //if latitude and longitude value is 0,0 do not add it to the hashmap
+    NSString *location = [OTDataSockets locationCoordinates];
+    if(![ location isEqual:@"0.000000,0.000000"]) {
+        [keyValuePairs setObject:location forKey:@"location"];
     }
     
     if (appendSessionStateData) {
