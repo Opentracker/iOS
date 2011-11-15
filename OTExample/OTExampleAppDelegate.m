@@ -24,7 +24,7 @@
     // to test things real-time always send data directly to logging service
     // make sure to comment this out if you are not testing
     [OTLogService setDirectSend:NO];
-    [[OTLogService sharedOTLogService] sendEvent:@"start session" ];
+    [[OTLogService sharedOTLogService] sendEvent:@"application opened" ];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
