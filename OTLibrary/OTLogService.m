@@ -517,7 +517,7 @@ static bool directSend = NO;
     
     NSString *url = @"http://log.opentracker.net/?";
     
-    //[dataDictionary setObject:[NSString stringWithFormat:@"%.0f", ([[NSDate date] timeIntervalSince1970] *1000 ) ] forKey:@"t"];
+    [dataDictionary setObject:[NSString stringWithFormat:@"%.0f", ([[NSDate date] timeIntervalSince1970] *1000 ) ] forKey:@"t_ms"];
     for (id key in dataDictionary) {
         NSString *value = [dataDictionary objectForKey:key];
         url = [NSString stringWithFormat:@"%@%@=%@&", url, [OTSend urlEncoded:key], [OTSend urlEncoded:value]];
