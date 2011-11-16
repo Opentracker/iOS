@@ -66,8 +66,8 @@
 
 /*!
  @method sendEvent
- @abstract Allows a session to register a particular event as having occurred,
- this data will be recorded and sent to www.opentracker.net.  
+ @abstract Allows a session to register a particular event as having occurred.
+           This function creates a new thread for each event being sent.
  @param description of the event or a set of key value pairs.
  */
 //-(void) sendEvent : (NSObject*) object ; 
