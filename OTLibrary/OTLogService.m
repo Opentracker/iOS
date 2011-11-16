@@ -13,6 +13,17 @@
 #import <arpa/inet.h>
 #import "OTSend.h"
 
+@interface OTLogService () //note the empty category name
+//define private methods here
+//see: http://stackoverflow.com/questions/172598/best-way-to-define-private-methods-for-a-class-in-objective-c
+/*!
+ @method sendEventObject
+ @abstract Allows a session to register a particular event as having occurred,
+ this data will be recorded and sent to www.opentracker.net.  
+ @param description of the event or a set of key value pairs.
+ */
+-(void) sendEventObject : (id)object ; 
+@end
 
 @implementation OTLogService
 static OTLogService *sharedOtagent = nil;
@@ -28,7 +39,7 @@ static bool directSend = NO;
     self = [super init];
     if (self) {
         //Initialize code here.
-        isSessionStarted = NO;
+        //isSessionStarted = NO;
     }
     
     
@@ -83,7 +94,9 @@ static bool directSend = NO;
  */
 -(void) onTerminate {
     isSessionStarted = NO;
-    sharedOtagent = nil;
+   // sharedOtagent = nil;
+   // [sharedOtagent release];
+    [self release];
 }
 
 
@@ -276,7 +289,7 @@ static bool directSend = NO;
             //TODO: send this to OTSend.send(hashmap)
         }
         //if data doesn't exist-> create data with initial parameters
-        if (otUserData != nil) {
+        if (otSessionData != nil) {
             //initialize the data
             NSArray *sessionData = [otSessionData componentsSeparatedByString: @"."];
             if ([sessionData count] != 4) {
@@ -346,21 +359,33 @@ static bool directSend = NO;
 }
 
 #pragma mark Send Event
-
-//see mutable dictionary : http://stackoverflow.com/questions/1760371/how-can-we-store-into-an-nsdictionary-what-is-the-difference-between-nsdictionar
-
 -(void)sendEvent:(id)object 
 {	
     NSLog(@"sendEvent: %@",object);
+    //see :http://stackoverflow.com/questions/3721761/iphone-upload-in-new-thread
+    //see : http://www.iphoneexamples.com/
+    //see :  http://forums.macrumors.com/showthread.php?t=665412
+    //create a new thread to make app more responsive
+    [NSThread detachNewThreadSelector:@selector(sendEventObject:) toTarget:self withObject:object];
+    
+}
+
+#pragma mark Send Event Object
+//see mutable dictionary : http://stackoverflow.com/questions/1760371/how-can-we-store-into-an-nsdictionary-what-is-the-difference-between-nsdictionar
+-(void)sendEventObject:(id)object 
+{	
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    NSLog(@"sendEventObject: %@",object);
     //see :  http://stackoverflow.com/questions/1144629/in-objective-c-how-do-i-test-the-object-type
     if([object isKindOfClass:[NSString class]]) {
 		//Convert the received object type into NSString while passing
         [self sendEventString:(NSString*)object addSessionState:YES];
+        
     } else  {
 		//Convert the received object type into NSMutableDictionary while passing
         [self sendEventDictionary:(NSMutableDictionary*)object addSessionState:YES];
     }
-    
+    [pool release];
 }
 
 #pragma mark Send Event String
@@ -368,8 +393,9 @@ static bool directSend = NO;
  This method will send the event which occurred.
  It can be used to get the status of the session, whether the session is started or resumed. 
  */
--(void) sendEventString :(NSString *)event addSessionState:(BOOL) appendSessionStateData {
-    NSLog(@"sendEventString:%@ addSessionState: %@", event , appendSessionStateData ? @"YES" : @"NO");
+-(void) sendEventString :(NSString *)event addSessionState:(BOOL) appendSessionStateData  {
+
+    NSLog(@"sendEventString:%@ addSessionState: %@", event, appendSessionStateData ? @"YES" : @"NO");
     
     //update the sessionData
     int eventCount = [self registerSessionEvent];
