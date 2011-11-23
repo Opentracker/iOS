@@ -18,17 +18,22 @@
  */
 +(NSString *) urlEncoded : (NSString*) url;
 /*!
- * @method send
+ * @method sendNewThread
  * @abstract Sends the key value pairs to Opentracker's logging/ analytics engines via
  *			 HTTP POST requests.
  *			 Based on sending key value pairs documented at:
  *			 http://api.opentracker.net/api/inserts/insert_event.jsp
  * @param keyValuePairs the key value pairs 
  *		    (plain text utf-8 strings) to send to the logging service.
- * @return a response string generated in opentracker.net
- *		     or nil if an exception is caught
  */
-+(NSString*) send: (NSMutableDictionary*) keyValuePairs;
++(void) sendNewThread : (NSString*) url;
+/*!
+ * @method send
+ * @abstract Creates new thread which calls the method send:keyValuePairs
+ * @param keyValuePairs the key value pairs 
+ *		    (plain text utf-8 strings) to send to the logging service.
+ */
++(void) send: (NSMutableDictionary*) keyValuePairs;
 
 /*!
  * @method sendUrl
@@ -40,12 +45,21 @@
 
 /*!
  * @method uploadFile
- * @abstract Method used for uploading a file to the default upload server
+ * @abstract Creates a new thread which calls uploadFileNewThread
  * @param fileToSend The file name to append to
- * @param uploadServer the url link of the upload server.
- * @return response string on upload.
  */
-+(BOOL) uploadFile:(NSString*) fileToSend toServer:(NSString*) uploadServer;
++(void) uploadFile:(NSString*) fileToSend;
+
+
+/*!
+ * @method uploadFileNewThread
+ * @abstract Method used for uploading a file to the default upload server
+ *           If the file upload is succesful then the fileToSend and zipped file are deleted.
+ *           If unsuccessful, only the zipped file is deleted.
+ * @param fileToSend The file name to append to
+ */
++(void) uploadFileNewThread:(NSString*) fileToSend;
+
 /*!
  * @method UUID 
  * @abstract Use to get the current device UUID - Universal Unique Identifier,
@@ -53,6 +67,7 @@
  *                     see discussion: 
  * @return The UUID as a string 
  */
-+(NSString *)UUID;    
++(NSString *)UUID;  
+
 
 @end
