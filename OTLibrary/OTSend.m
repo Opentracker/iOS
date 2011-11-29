@@ -83,13 +83,11 @@
     
     NSString *responseDataString =nil;
     BOOL isSuccessful = NO;
-    
-    
     NSError *error = nil;
     @try {
-		//Perform a synchronous load of the specified URL request
+        //Perform a synchronous load of the specified URL request
         NSData *responseData = [NSURLConnection sendSynchronousRequest:theRequest returningResponse: &response error:&error];
-		//Gets the NSData content in NSString format. 
+        //Gets the NSData content in NSString format. 
         responseDataString = [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
         isSuccessful = YES;
     }
@@ -120,92 +118,96 @@
 
 +(void) uploadFile:(NSString*) fileToSend {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    NSLog(@"uploadFile");
-    
-    UIBackgroundTaskIdentifier *bgtask = nil;
-    UIApplication *app = [UIApplication sharedApplication];
-    bgtask = [app beginBackgroundTaskWithExpirationHandler:^{}];
-    
-    NSString* newFileName = [NSString stringWithFormat:@"%@.%@.gz",[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""], [self UUID]];
-    NSLog(@"new filename: %@", newFileName);
-    //string data
-    // see uploading file : http://stackoverflow.com/questions/2229002/how-to-send-file-along-some-post-variables-with-objective-c-iphone-sdk
-    NSString *post = @"message=test";
-    NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
-    
-    //file data
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *fullPathToFile = [documentsDirectory stringByAppendingPathComponent:fileToSend];
-    NSData *dataToPost = [[NSData alloc] initWithContentsOfFile:fullPathToFile];
-    //NSLog(@"data to post:%@", dataToPost);
-    
-    //request
-    NSString *url = @"http://upload.opentracker.net/upload/upload.jsp";
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSHTTPURLResponse *response = nil;
-    [request setHTTPMethod:@"POST"];
-    NSString *boundary = @"*****";
-    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
-    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
-    
-    //POST body
-    NSMutableData *postbody = [NSMutableData data]; 
-    
-    //append string data
-    [postbody appendData:postData];
-    
-    //append file
-    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    NSString *contentWithFilename = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", newFileName  ] ;
-    [postbody appendData:[[NSString stringWithString:contentWithFilename] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [postbody appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
-    [postbody appendData:[NSData dataWithData:dataToPost]];
-    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    [request setHTTPBody:postbody];
-    
-    //set content length
-    NSString *postLength = [NSString stringWithFormat:@"%d", [postbody length]];
-    [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-    
-    //send and receive
-    NSString *responseDataString = nil;
-    BOOL isSuccessful = NO; 
-    NSError *error = nil;
-    @try {
-        NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-        responseDataString = [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
-        isSuccessful = YES;
-    }
-    @catch (NSException *exception) {
-        NSLog(@"connection failed.Exception thrown.");
+    //see: http://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjectiveC/Chapters/ocThreading.html#//apple_ref/doc/uid/TP30001163-CH19-SW1
+    @synchronized(self){
+        NSLog(@"uploadFile");
+        UIBackgroundTaskIdentifier *bgtask = nil;
+        UIApplication *app = [UIApplication sharedApplication];
+        bgtask = [app beginBackgroundTaskWithExpirationHandler:^{}];
+        NSString* newFileName = [NSString stringWithFormat:@"%@.%@.gz",[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""], [self UUID]];
+        NSLog(@"new filename: %@", newFileName);
+        //string data
+        // see uploading file : http://stackoverflow.com/questions/2229002/how-to-send-file-along-some-post-variables-with-objective-c-iphone-sdk
+        NSString *post = @"message=test";
+        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
         
-        responseDataString = nil;
-        isSuccessful = NO;
+        //file data
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSString *fullPathToFile = [documentsDirectory stringByAppendingPathComponent:fileToSend];
+        NSData *dataToPost = [[NSData alloc] initWithContentsOfFile:fullPathToFile];
+        //NSLog(@"data to post:%@", dataToPost);
+        
+        //request
+        NSString *url = @"http://upload.opentracker.net/upload/upload.jsp";
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
+        NSHTTPURLResponse *response = nil;
+        [request setHTTPMethod:@"POST"];
+        NSString *boundary = @"*****";
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+        [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+        
+        //POST body
+        NSMutableData *postbody = [NSMutableData data]; 
+        
+        //append string data
+        [postbody appendData:postData];
+        
+        //append file
+        [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        NSString *contentWithFilename = [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", newFileName  ] ;
+        [postbody appendData:[[NSString stringWithString:contentWithFilename] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [postbody appendData:[[NSString stringWithString:@"Content-Type: application/octet-stream\r\n\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [postbody appendData:[NSData dataWithData:dataToPost]];
+        [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        [request setHTTPBody:postbody];
+        
+        //set content length
+        NSString *postLength = [NSString stringWithFormat:@"%d", [postbody length]];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        
+        //send and receive
+        NSString *responseDataString = nil;
+        BOOL isSuccessful = NO; 
+        NSError *error = nil;
+        @try {
+            NSData *responseData = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+            responseDataString = [[NSString alloc] initWithData:responseData encoding:NSASCIIStringEncoding];
+            isSuccessful = YES;
+        }
+        @catch (NSException *exception) {
+            NSLog(@"connection failed.Exception thrown.");
+            
+            responseDataString = nil;
+            isSuccessful = NO;
+        }
+        
+        //if error is encountered on upload
+        if (error) {
+            NSLog(@"connection failed");
+            responseDataString = nil;
+            isSuccessful = NO;
+        }
+        
+        if (isSuccessful) {
+            //NSLog(@"The response : %@", response);
+            [OTFileUtils removeFile:fileToSend];
+            [OTFileUtils removeFile:@"fileToSend"];
+            NSLog(@"cleared files");
+        } else {
+            NSLog(@"File did not empty!");
+            [OTFileUtils removeFile:fileToSend];
+        }
+        //before we upload the data, wait for five seconds
+        double t0 = [[NSDate date] timeIntervalSince1970];
+        [NSThread sleepForTimeInterval:5.0];
+        NSLog(@"time sleep:%.2f", [[NSDate date] timeIntervalSince1970] - t0 );
+        [pool release];
+        [app endBackgroundTask:bgtask];
+        bgtask = UIBackgroundTaskInvalid;
     }
-    
-    //if error is encountered on upload
-    if (error) {
-        NSLog(@"connection failed");
-        responseDataString = nil;
-        isSuccessful = NO;
-    }
-    
-    if (isSuccessful) {
-        //NSLog(@"The response : %@", response);
-        [OTFileUtils removeFile:fileToSend];
-        [OTFileUtils removeFile:@"fileToSend"];
-        NSLog(@"cleared files");
-    } else {
-        NSLog(@"File did not empty!");
-        [OTFileUtils removeFile:fileToSend];
-    }
-    [app endBackgroundTask:bgtask];
-    bgtask = UIBackgroundTaskInvalid;
-    [pool release];
-
 }
 #pragma mark URL Encoded
 /*
