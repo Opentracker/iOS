@@ -14,6 +14,8 @@
 #import <ifaddrs.h>
 #import <netdb.h>
 
+#import <CoreTelephony/CTCarrier.h>
+#import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #import <CoreFoundation/CoreFoundation.h>
 #define kShouldPrintReachabilityFlags 1
 
@@ -329,5 +331,33 @@ static long EXPIRE_S =  60l;
 +(NSString*) device {
     //see:  http://www.iphonedevsdk.com/forum/iphone-sdk-development/4960-how-identify-device-user.html
     return [[UIDevice currentDevice] model];
+}
+
+#pragma mark carrier
+/*
+ This method will return the carrier service provider
+ */
++(NSString*) carrier { 
+    // see: http://iphonedevelopertips.com/core-services/carrier-information-mobile-network-code-mnc-and-mobile-country-code-mcc.html
+    // Setup the Network Info and create a CTCarrier object
+    CTTelephonyNetworkInfo *networkInfo = [[[CTTelephonyNetworkInfo alloc] init] autorelease];
+    CTCarrier *carrier = [networkInfo subscriberCellularProvider];
+    
+    // Get carrier name
+    NSString *carrierName = [carrier carrierName];
+    if (carrierName != nil)
+        NSLog(@"Carrier: %@", carrierName);
+    return carrierName;
+}
+
+#pragma mark locale
+/*
+ This method will return the current language set on the phone.
+ Whether it is en_US, fr_FR etc
+ */
++(NSString*) locale {
+    NSLocale *locale = [NSLocale currentLocale];
+    NSLog(@"%@", [locale displayNameForKey:NSLocaleIdentifier value:[locale localeIdentifier]]);
+    return  [locale localeIdentifier];
 }
 @end
