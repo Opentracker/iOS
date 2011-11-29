@@ -14,15 +14,29 @@
 #import "OTSend.h"
 
 @interface OTLogService () //note the empty category name
+
 //define private methods here
 //see: http://stackoverflow.com/questions/172598/best-way-to-define-private-methods-for-a-class-in-objective-c
+
 /*!
- @method sendEventObject
+ @method processEvent
+ @abstract calls the method send event. if the event is a first event
+           from the wifi network, it triggers the zip and upload of the file.
+ @param description of the event.
+ @param a set of key value pairs to be included in the event.
+ @param a boolean variable which allows session data to be added.
+ */
+-(void) sendEvent:(NSString*) eventName withDictionary:(NSMutableDictionary*) keyValuePairs addSessionState:(BOOL)appendSessionStateData;
+/*!
+ @method processEvent
  @abstract Allows a session to register a particular event as having occurred,
  this data will be recorded and sent to www.opentracker.net.  
- @param description of the event or a set of key value pairs.
+ @param description of the event.
+ @param a set of key value pairs to be included in the event.
+ @param a boolean variable which allows session data to be added.
  */
--(void) sendEventObject : (id)object ; 
+-(void) processEvent:(NSString*) eventName withDictionary:(NSMutableDictionary*) keyValuePairsFromEvent addSessionState:(BOOL)appendSessionStateData;
+
 @end
 
 @implementation OTLogService
@@ -30,6 +44,7 @@ static OTLogService *sharedOtagent = nil;
 OTDataSockets *otdataSockets ; 
 static int sessionLapseTimeMs= 1000*60*30; //TODO,testing
 static bool directSend = NO; 
+static bool isFirstWiFiEvent = YES;
 @synthesize appname;
 
 
@@ -95,7 +110,7 @@ static bool directSend = NO;
 -(void) onTerminate {
     isSessionStarted = NO;
     // sharedOtagent = nil;
-    // [sharedOtagent release];
+    //[sharedOtagent release];
     [self release];
 }
 
@@ -220,7 +235,7 @@ static bool directSend = NO;
                 
                 // update the event count
                 lifeTimeEventCount++;
-
+                
             } @catch (NSException *e) {
 				//Sending the error message occurred as Dictionary to opentracker.net
                 NSLog(@"otui has corrupted data: %@", [e reason]);
@@ -243,126 +258,126 @@ static bool directSend = NO;
             }
         }
     }
-
+    
     
     //Create data with initial parameters
     int sessionEventCount = 1;
     double previousEventUnixTimestamp = currentUnixTimestampMs;
-
+    
     BOOL isNewSession = YES;
-        if (otSessionData != nil) {
-            //initialize the data
-            NSArray *sessionData = [otSessionData componentsSeparatedByString: @"."];
-            if ([sessionData count] != 4) {
-                NSLog(@"Data is corrupted length: %d, sessionData: %@" ,[sessionData count], sessionData);
-                NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-                [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-                [logDictionary setObject:@"Got corrupt ots, wrong length." forKey:@"message"];
-                //TODO: send this to OTSend.send(hashmap)
-                [logDictionary  release];
-                //data is corrupted, and initialized
-                
-            } else {
-                @try {
-                    // as per
-                    // http://api.opentracker.net/api/inserts/browser/reading_cookie.jsp
-                    
-                    // _ots <session event view count>. <current visit start
-                    // unix timestamp>. <previous event view unix timestamp>.
-                    // <current event view unix timestamp>
-                    previousEventUnixTimestamp = [[sessionData objectAtIndex:3] doubleValue];
-                    double diff = (currentUnixTimestampMs - previousEventUnixTimestamp);
-                    //do the work, to start a new event
-                    NSLog(@"Got: %.0f[ms]", diff);
-                    NSLog(@"Got currentUnixTimestampMs: %.0f [ms]", currentUnixTimestampMs );
-                    NSLog(@"Got previousEventUnixTimestamp: %.0f [ms]", previousEventUnixTimestamp);
-                    // make sure we have a ongoing session
-                    if (diff < sessionLapseTimeMs) {
-                        NSLog(@"Continuing starting.");
-                        // ongoing session, parse the session data
-                        sessionEventCount = [[sessionData objectAtIndex:0] intValue];
-                        // currentSessionStartUnixTimestamp =
-                        // Long.parseLong(sessionData[1]);
-                        
-                        // do the work, to start a new event
-                        sessionEventCount++;
-                        
-                        // use initial session values
-                        isNewSession = NO;
-                        
-
-                    }
-                } @catch (NSException * e) {
-					//Sending the error message occurred as Dictionary to opentracker.net
-                    NSLog(@"ots has corrupted data: %@", [e reason]);
-                    NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-                    [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-                    [logDictionary setObject:@"ots has corrupted data" forKey:@"message"];
-                    [logDictionary setObject:[e reason] forKey:@"reason"];
-                    [logDictionary setObject:[e callStackSymbols] forKey:@"exception"];
-                    [OTSend send:logDictionary];
-                    [logDictionary  release];
-                    
-                    //just reinitialize everything
-                    sessionEventCount = 1;
-                    previousEventUnixTimestamp = currentSessionStartUnixTimestamp;
-
-                }
-            }
-        }
-        if (isNewSession) {
-            NSLog(@"Updating data with new session.");
-            previousEventUnixTimestamp = currentSessionStartUnixTimestamp;
-            currentSessionStartUnixTimestamp = currentUnixTimestampMs;
-            sessionCount++;
-        }
-        
-        otSessionData = [NSString stringWithFormat:@"%d.%.0f.%.0f.%.0f", sessionEventCount, currentSessionStartUnixTimestamp, previousEventUnixTimestamp, currentUnixTimestampMs ];
-        
-        @try {
-            NSLog(@ "Writing session: %@", otSessionData);
-            NSLog(@"Writing current: %.0f", currentUnixTimestampMs);
-            NSLog(@"Writing previous: %.0f", previousEventUnixTimestamp);
-            NSLog(@"Writing current: ", [NSDate dateWithTimeIntervalSince1970:currentUnixTimestampMs/1000 ] );
-            NSLog(@"Writing previous: ", [NSDate dateWithTimeIntervalSince1970:previousEventUnixTimestamp/1000 ]);
-            [OTFileUtils writeFile:otsfilename withString:otSessionData];
-        }
-        @catch (NSException *exception) {
-            //Sending the error message occurred as Dictionary to opentracker.net
-            NSLog(@"Exception while writing to ots: %@", [exception reason]);
+    if (otSessionData != nil) {
+        //initialize the data
+        NSArray *sessionData = [otSessionData componentsSeparatedByString: @"."];
+        if ([sessionData count] != 4) {
+            NSLog(@"Data is corrupted length: %d, sessionData: %@" ,[sessionData count], sessionData);
             NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
             [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-            [logDictionary setObject:@"Exception while writing to ots" forKey:@"message"];
-            [logDictionary setObject:[exception reason] forKey:@"reason"];
-            [logDictionary setObject:[exception callStackSymbols] forKey:@"exception"];
-            [OTSend send:logDictionary];
-            [logDictionary  release];
-        }
-
-        NSLog(@"ots write: %@" ,otSessionData); 
-        
-        
-        //see http://www.cocoadev.com/index.pl?NSLog
-        //format the otUserData
-        otUserData = [NSString stringWithFormat:@"%d.%.0f.%.0f.%.0f.%d.%d", randomNumberClient, firstSessionStartUnixTimestamp, previousSessionStartUnixTimestamp, currentSessionStartUnixTimestamp, sessionCount, lifeTimeEventCount ];
-        
-        
-        @try {
-            [OTFileUtils  writeFile:otuifilename withString:otUserData];
-        }
-        @catch (NSException *exception) {
-            //Sending the error message occurred as Dictionary to opentracker.net
-            NSLog(@"Exception while writing to otui: %@", [exception reason]);
-            NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-            [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-            [logDictionary setObject:@"Exception while writing to otui" forKey:@"message"];
-            [logDictionary setObject:[exception reason] forKey:@"reason"];
-            [logDictionary setObject:[exception callStackSymbols] forKey:@"exception"];
+            [logDictionary setObject:@"Got corrupt ots, wrong length." forKey:@"message"];
             //TODO: send this to OTSend.send(hashmap)
             [logDictionary  release];
+            //data is corrupted, and initialized
+            
+        } else {
+            @try {
+                // as per
+                // http://api.opentracker.net/api/inserts/browser/reading_cookie.jsp
+                
+                // _ots <session event view count>. <current visit start
+                // unix timestamp>. <previous event view unix timestamp>.
+                // <current event view unix timestamp>
+                previousEventUnixTimestamp = [[sessionData objectAtIndex:3] doubleValue];
+                double diff = (currentUnixTimestampMs - previousEventUnixTimestamp);
+                //do the work, to start a new event
+                NSLog(@"Got: %.0f[ms]", diff);
+                NSLog(@"Got currentUnixTimestampMs: %.0f [ms]", currentUnixTimestampMs );
+                NSLog(@"Got previousEventUnixTimestamp: %.0f [ms]", previousEventUnixTimestamp);
+                // make sure we have a ongoing session
+                if (diff < sessionLapseTimeMs) {
+                    NSLog(@"Continuing starting.");
+                    // ongoing session, parse the session data
+                    sessionEventCount = [[sessionData objectAtIndex:0] intValue];
+                    // currentSessionStartUnixTimestamp =
+                    // Long.parseLong(sessionData[1]);
+                    
+                    // do the work, to start a new event
+                    sessionEventCount++;
+                    
+                    // use initial session values
+                    isNewSession = NO;
+                    
+                    
+                }
+            } @catch (NSException * e) {
+                //Sending the error message occurred as Dictionary to opentracker.net
+                NSLog(@"ots has corrupted data: %@", [e reason]);
+                NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
+                [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
+                [logDictionary setObject:@"ots has corrupted data" forKey:@"message"];
+                [logDictionary setObject:[e reason] forKey:@"reason"];
+                [logDictionary setObject:[e callStackSymbols] forKey:@"exception"];
+                [OTSend send:logDictionary];
+                [logDictionary  release];
+                
+                //just reinitialize everything
+                sessionEventCount = 1;
+                previousEventUnixTimestamp = currentSessionStartUnixTimestamp;
+                
+            }
         }
-        NSLog(@"otui write: %@", otUserData);
-          
+    }
+    if (isNewSession) {
+        NSLog(@"Updating data with new session.");
+        previousEventUnixTimestamp = currentSessionStartUnixTimestamp;
+        currentSessionStartUnixTimestamp = currentUnixTimestampMs;
+        sessionCount++;
+    }
+    
+    otSessionData = [NSString stringWithFormat:@"%d.%.0f.%.0f.%.0f", sessionEventCount, currentSessionStartUnixTimestamp, previousEventUnixTimestamp, currentUnixTimestampMs ];
+    
+    @try {
+        NSLog(@ "Writing session: %@", otSessionData);
+        NSLog(@"Writing current: %.0f", currentUnixTimestampMs);
+        NSLog(@"Writing previous: %.0f", previousEventUnixTimestamp);
+        NSLog(@"Writing current: ", [NSDate dateWithTimeIntervalSince1970:currentUnixTimestampMs/1000 ] );
+        NSLog(@"Writing previous: ", [NSDate dateWithTimeIntervalSince1970:previousEventUnixTimestamp/1000 ]);
+        [OTFileUtils writeFile:otsfilename withString:otSessionData];
+    }
+    @catch (NSException *exception) {
+        //Sending the error message occurred as Dictionary to opentracker.net
+        NSLog(@"Exception while writing to ots: %@", [exception reason]);
+        NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
+        [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
+        [logDictionary setObject:@"Exception while writing to ots" forKey:@"message"];
+        [logDictionary setObject:[exception reason] forKey:@"reason"];
+        [logDictionary setObject:[exception callStackSymbols] forKey:@"exception"];
+        [OTSend send:logDictionary];
+        [logDictionary  release];
+    }
+    
+    NSLog(@"ots write: %@" ,otSessionData); 
+    
+    
+    //see http://www.cocoadev.com/index.pl?NSLog
+    //format the otUserData
+    otUserData = [NSString stringWithFormat:@"%d.%.0f.%.0f.%.0f.%d.%d", randomNumberClient, firstSessionStartUnixTimestamp, previousSessionStartUnixTimestamp, currentSessionStartUnixTimestamp, sessionCount, lifeTimeEventCount ];
+    
+    
+    @try {
+        [OTFileUtils  writeFile:otuifilename withString:otUserData];
+    }
+    @catch (NSException *exception) {
+        //Sending the error message occurred as Dictionary to opentracker.net
+        NSLog(@"Exception while writing to otui: %@", [exception reason]);
+        NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
+        [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
+        [logDictionary setObject:@"Exception while writing to otui" forKey:@"message"];
+        [logDictionary setObject:[exception reason] forKey:@"reason"];
+        [logDictionary setObject:[exception callStackSymbols] forKey:@"exception"];
+        //TODO: send this to OTSend.send(hashmap)
+        [logDictionary  release];
+    }
+    NSLog(@"otui write: %@", otUserData);
+    
     [pool release];
     return sessionEventCount;
 }
@@ -394,15 +409,91 @@ static bool directSend = NO;
     
     NSLog(@"sendEventString:%@ addSessionState: %@", event, appendSessionStateData ? @"YES" : @"NO");
     
+    [self sendEvent:event withDictionary:nil addSessionState:appendSessionStateData];
+    
+}
+
+
+#pragma mark Send Event Dictionary
+/*
+ This method will send the event which occurred.
+ It can be used to get the status of the session, whether the session is started or resumed. 
+ */
+-(void) sendEventDictionary :(NSMutableDictionary *)keyValuePairs addSessionState:(BOOL)appendSessionStateData {
+    NSLog(@"sendEventDictionary(%@)" , appendSessionStateData ? @"YES" : @"NO");
+    [self sendEvent:nil withDictionary:keyValuePairs addSessionState:appendSessionStateData];
+}
+
+#pragma mark Send Event as String or Dictionary Add a Session State
+/*
+ This method will zip and upload the fileToSend.gz if this was the first event from wifi
+ and if the file is not empty and eventually calls processEvent method.
+ */
+-(void) sendEvent:(NSString*) event withDictionary:(NSMutableDictionary*) keyValuePairs addSessionState:(BOOL)appendSessionStateData {
+    double t0 = [[NSDate date] timeIntervalSince1970];
+    NSLog(@"sendEvent(%@, %@, %@)", event, keyValuePairs, appendSessionStateData ? @"YES" : @"NO");
+    // if we are on wifi then start separate thread otherwise
+    if ([otdataSockets networkType]==@"Wi-Fi") {
+
+        // use this wifi event to upload the file
+        if (isFirstWiFiEvent ) {
+            if ([OTFileUtils readFile:@"fileToSend"] != nil ) {
+                [self uploadCompressedFile];
+            }
+            isFirstWiFiEvent = NO;
+        }
+        
+    } else {
+        // make sure the next wifi event will trigger as a first wifi event
+        isFirstWiFiEvent = YES;
+        
+    }
+    [self processEvent:event withDictionary:keyValuePairs addSessionState:appendSessionStateData];
+    
+    t0 = [[NSDate date] timeIntervalSince1970] - t0;
+    NSLog(@"%.0f[ms]",t0);
+}
+
+#pragma mark Process event
+/*
+ This method creates key value pairs and uploads passes it to the opentracker url
+ or just appends it to a file based on the connectivity of the phone. 
+ */
+-(void) processEvent:(NSString*) eventName withDictionary:(NSMutableDictionary*) keyValuePairsFromEvent addSessionState:(BOOL)appendSessionStateData {
+    NSLog(@"processEvent:(%@, %@, %@)", eventName, keyValuePairsFromEvent, appendSessionStateData ? @"YES" : @"NO");
+    NSMutableDictionary* keyValuePairs = [[NSMutableDictionary alloc] init];
+    
+    if(keyValuePairs!=nil){
+        [keyValuePairs addEntriesFromDictionary:keyValuePairsFromEvent];
+    }
+    
+//    int totalEventCount = 0;
+//    @try {
+//        NSArray *userData = [[OTFileUtils readFile:@"otui"] componentsSeparatedByString: @"."];
+//        totalEventCount = [[userData objectAtIndex:5] intValue] ;
+//    }
+//    @catch (NSException *exception) {
+//     //do nothing
+//    }
+    
+    //it is default title tag
+    if (eventName == nil) {
+        if ([keyValuePairs objectForKey:@"title"] == nil) {
+            [keyValuePairs setObject:@"[No title]" forKey:@"ti"];
+        } else {
+            [keyValuePairs setObject:[NSString stringWithFormat:@"%@", [keyValuePairs objectForKey:@"title"]] forKey:@"ti"];
+            [keyValuePairs removeObjectForKey:@"title"];
+        }
+    }else {
+        [keyValuePairs setObject:[NSString stringWithFormat:@"%@", eventName] forKey:@"ti"];
+    }
+    
     //update the sessionData
     int eventCount = [self registerSessionEvent];
-	NSLog(@"eventCount %d",eventCount);
-    NSMutableDictionary *keyValuePairs = [[NSMutableDictionary alloc] init];
     //TODO : make appname static string assigned using init
     [keyValuePairs setObject:appname forKey:@"si"];
-    [keyValuePairs setObject:event forKey:@"ti"];
     //TODO : make appname static string assigned using init
-    [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[event stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
+    [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[[keyValuePairs objectForKey:@"ti"] stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
     [keyValuePairs setObject:[otdataSockets networkType] forKey:@"connection"];
     [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];	
     [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
@@ -410,19 +501,23 @@ static bool directSend = NO;
     [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
     [keyValuePairs setObject:[OTDataSockets platformVersion]  forKey:@"platform version"];
     [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
+    [keyValuePairs setObject:[OTDataSockets locale] forKey:@"locale"];
+    NSString* carrierName = [OTDataSockets carrier];
+    if(carrierName!= nil){
+        [keyValuePairs setObject:carrierName forKey:@"isp"];
+    }
     //if latitude and longitude value is 0,0 do not add it to the hashmap
     NSString *location = [OTDataSockets locationCoordinates];
-    if(![ location isEqual:@"0.000000,0.000000"]) {
+    if(![ location isEqual:@"0.0000,0.0000"]) {
         [keyValuePairs setObject:location forKey:@"location"];
     }
-    
     //also add any session state data
-    NSMutableDictionary *keyValuePairsMerged =[[NSMutableDictionary alloc] init];
+    NSMutableDictionary *dataFiles =[[NSMutableDictionary alloc] init];
     
     if (appendSessionStateData) {
         @try {
-            [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
-            [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
+            [dataFiles setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
+            [dataFiles setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
         } @catch (NSException *e) {
 			//Sending the error message occurred as Dictionary to opentracker.net
             NSLog(@"Exception while reading to ots/ otui: %@", [e reason]);
@@ -434,16 +529,16 @@ static bool directSend = NO;
             [logDictionary  release];
         }
     }
-    if (keyValuePairs != nil)
-        [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
+    if (dataFiles != nil)
+        [keyValuePairs addEntriesFromDictionary:dataFiles];
     
     @try {
         if ([otdataSockets networkType]==@"Wi-Fi") {
-            [OTSend send:keyValuePairsMerged];
+            [OTSend send:keyValuePairs];
         } else if (directSend) {
-            [OTSend send:keyValuePairsMerged];
+            [OTSend send:keyValuePairs];
         } else {
-            [self appendDataToFile:keyValuePairsMerged];
+            [self appendDataToFile:keyValuePairs];
         }
     } @catch (NSException *e) {
 		//Sending the error message occurred as Dictionary to opentracker.net
@@ -454,80 +549,11 @@ static bool directSend = NO;
         [OTSend send:logDictionary];
         [logDictionary  release];
     }
-	[keyValuePairsMerged release];
+	[dataFiles release];
 	[keyValuePairs release];
     
 }
 
-
-#pragma mark Send Event Dictionary
--(void) sendEventDictionary :(NSMutableDictionary *)keyValuePairs addSessionState:(BOOL)appendSessionStateData {
-    NSLog(@"sendEventDictionary(%@)" , appendSessionStateData ? @"YES" : @"NO");
-    
-    int eventCount = [self registerSessionEvent];
-    
-    //also add any session state data
-    NSMutableDictionary *keyValuePairsMerged =[[NSMutableDictionary alloc] init];
-    [keyValuePairsMerged setObject:appname forKey:@"si"];
-    //it is default title tag
-    if ([keyValuePairs objectForKey:@"ti"] == nil)
-        if ([keyValuePairs objectForKey:@"title"] == nil) {
-            [keyValuePairs setObject:@"[No title]" forKey:@"ti"];
-            [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname, @"[No title]"] forKey:@"lc" ];
-        } else {
-            [keyValuePairs setObject:[keyValuePairs objectForKey:@"title"] forKey:@"ti"];
-            [keyValuePairs setObject:[NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[[keyValuePairs objectForKey:@"title"] stringByReplacingOccurrencesOfString:@"/" withString:@"."]] forKey:@"lc" ];
-            [keyValuePairs removeObjectForKey:@"title"];
-        }
-    [keyValuePairs setObject:[otdataSockets networkType] forKey: @"connection"];
-    [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];
-    [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
-    [keyValuePairs setObject:[OTDataSockets screenWidth] forKey:@"sw"];
-    [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"app version"];
-    [keyValuePairs setObject:[[UIDevice currentDevice] systemVersion]  forKey:@"platform version"];
-    [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
-    //if latitude and longitude value is 0,0 do not add it to the hashmap
-    NSString *location = [OTDataSockets locationCoordinates];
-    if(![ location isEqual:@"0.000000,0.000000"]) {
-        [keyValuePairs setObject:location forKey:@"location"];
-    }
-    
-    if (appendSessionStateData) {
-        @try {
-            //TODO make gtSessionStateDataPairs
-            [keyValuePairs setObject:[OTFileUtils readFile:@"otui"] forKey:@"otui"];
-            [keyValuePairs setObject:[OTFileUtils readFile:@"ots"] forKey:@"ots"];
-        } @catch (NSException *e) {
-            //Sending the error message occurred as Dictionary to opentracker.net
-            NSLog(@"Exception while getting fileName data pairs");
-            NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-            [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-            [logDictionary setObject:[e reason] forKey:@"message"];
-            [OTSend send:logDictionary];
-            [logDictionary  release];
-        }
-    }
-    if (keyValuePairs != nil)
-        [keyValuePairsMerged addEntriesFromDictionary:keyValuePairs];
-    @try {
-        if ([otdataSockets networkType]==@"Wi-Fi") { 
-            [OTSend send:keyValuePairsMerged];
-        } else if (directSend) {
-            [OTSend send:keyValuePairsMerged];
-        } else {
-            [self appendDataToFile:keyValuePairsMerged];
-        }
-    } @catch (NSException *e) {
-		//Sending the error message occurred as Dictionary to opentracker.net
-        NSLog(@"Exception while appending data to file: %@", [e reason]);
-        NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
-        [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
-        [logDictionary setObject:[e reason] forKey:@"message"];
-		//TODO: send this to OTSend.send(hashmap)
-		[OTSend send:logDictionary];        
-        [logDictionary  release];
-    }
-}
 #pragma mark Append Data To File
 /*
  This will create a url by appending the keys and its values of the input parameter dataDictionary
@@ -540,7 +566,7 @@ static bool directSend = NO;
     
     NSString *url = @"http://log.opentracker.net/?";
     
-    [dataDictionary setObject:[NSString stringWithFormat:@"%.0f", ([[NSDate date] timeIntervalSince1970] *1000 ) ] forKey:@"t_ms"];
+    [dataDictionary setObject:[NSString stringWithFormat:@"%.0f", ([[NSDate date] timeIntervalSince1970] *1000 )] forKey:@"t_ms"];
     for (id key in dataDictionary) {
         NSString *value = [dataDictionary objectForKey:key];
         url = [NSString stringWithFormat:@"%@%@=%@&", url, [OTSend urlEncoded:key], [OTSend urlEncoded:value]];
@@ -641,3 +667,5 @@ static bool directSend = NO;
     return gzippedfilename;
 }
 @end
+
+
