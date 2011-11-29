@@ -178,5 +178,20 @@ typedef enum {
  * @return model name as a pretty string.
  */
 +(NSString*) device;
+
+/*!
+ * @method carrier
+ * @abstract Gets the string of the carrier service
+ *           provider of the current device.
+ * @return carrier name as a pretty string.
+ */
++(NSString*) carrier;
+/*!
+ * @method locale
+ * @abstract Gets the string of the current language
+ *           set on the phone. If it en_US, fr_FR
+ * @return language as a string.
+ */
++(NSString*) locale;
 @end
     
