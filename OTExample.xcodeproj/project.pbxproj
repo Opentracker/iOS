@@ -23,6 +23,7 @@
 		4C299E191450660B008EBE23 /* OTFileUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E131450660B008EBE23 /* OTFileUtils.m */; };
 		4C299E1A1450660B008EBE23 /* OTLogService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E151450660B008EBE23 /* OTLogService.m */; };
 		4C299E1B1450660B008EBE23 /* OTSend.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C299E171450660B008EBE23 /* OTSend.m */; };
+		4C6C436D147D481300B9D021 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C6C436C147D481300B9D021 /* CoreTelephony.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		4C299E151450660B008EBE23 /* OTLogService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTLogService.m; sourceTree = "<group>"; };
 		4C299E161450660B008EBE23 /* OTSend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OTSend.h; sourceTree = "<group>"; };
 		4C299E171450660B008EBE23 /* OTSend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OTSend.m; sourceTree = "<group>"; };
+		4C6C436C147D481300B9D021 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C6C436D147D481300B9D021 /* CoreTelephony.framework in Frameworks */,
 				4C299E0A14506108008EBE23 /* SystemConfiguration.framework in Frameworks */,
 				4C299E0814506102008EBE23 /* libz.dylib in Frameworks */,
 				4C299E05145060F7008EBE23 /* CoreLocation.framework in Frameworks */,
@@ -73,6 +76,7 @@
 		4C299DCD14505B7C008EBE23 = {
 			isa = PBXGroup;
 			children = (
+				4C6C436C147D481300B9D021 /* CoreTelephony.framework */,
 				4C299E0914506108008EBE23 /* SystemConfiguration.framework */,
 				4C299E0714506102008EBE23 /* libz.dylib */,
 				4C299E04145060F7008EBE23 /* CoreLocation.framework */,
