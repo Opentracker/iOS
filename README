@@ -6,7 +6,7 @@ The Opentracker Events Engine supports tracking of iOS users and native app even
 
 This is done by including the Opentracker iOS library in your app and following the instructions below.
 
-The Opentracker iPhone library includes functions and listeners so you can easily insert your custom events into the Opentracker.net Events Eengine.
+The Opentracker iOS library includes functions and listeners so you can easily insert your custom events into the Opentracker.net Events Eengine.
 
 Current features include:
 
