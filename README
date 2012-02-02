@@ -1,7 +1,7 @@
 Information regarding how to start using opentracker for the iOS /iPhone/ iPad can be found here:
-http://api.opentracker.net/api/inserts/app/iphone.jsp
+http://api.opentracker.net/api/inserts/app/ios.jsp
 
-Tracking iPhone App events Quickstart
+Tracking iOS App events Quickstart
 The Opentracker Events Engine supports tracking of iOS users and native app events.
 
 This is done by including the Opentracker iOS library in your app and following the instructions below.
