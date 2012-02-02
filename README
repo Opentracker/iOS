@@ -1,4 +1,68 @@
-Information regarding how to start using opentracker for the iPhone/ iPad can be found here:
-http://dev.opentracker.net/api/inserts/app/iphone.jsp
+Information regarding how to start using opentracker for the iOS /iPhone/ iPad can be found here:
+http://api.opentracker.net/api/inserts/app/iphone.jsp
 
-The url will move to production once the documentation has stablized.
+Tracking iPhone App events Quickstart
+The Opentracker Events Engine supports tracking of iOS users and native app events.
+
+This is done by including the Opentracker iOS library in your app and following the instructions below.
+
+The Opentracker iPhone library includes functions and listeners so you can easily insert your custom events into the Opentracker.net Events Eengine.
+
+Current features include:
+
+By default We collect the following data stats
+
+last event
+duration
+online status
+visits(pv)
+title
+area code (US)
+city
+company/ org
+country_code
+country_name
+currentTitle
+current visit duration
+dma_code
+entry page (landing page)
+event
+eventUnixTimestamp
+event_id
+first measurement
+first_session_unix_timestamp
+http://log.opentracker.net/?platform_version
+inet_aton
+connection_type
+IP address
+isp
+isp/ org
+last_speed
+latitude
+location_coordinates
+longitude
+machine_idx
+events per session
+number of sessions
+number of events this session
+operating systems
+platform_version
+provider
+region
+region_code
+resolution
+search term
+session_end_unix_timestamp
+session_id
+session_start_unix_timestamp
+site
+timezone
+total duration
+total_number_sessions
+total events
+type
+use_id
+user_agent
+status
+visit_id
+zip code
