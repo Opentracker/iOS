@@ -499,7 +499,7 @@ static bool isFirstWiFiEvent = YES;
      //TODO : make appname static string assigned using init
      [keyValuePairs setObject:appname forKey:@"si"];
      //TODO : make appname static string assigned using init
-     NSString *currentLink = [NSString stringWithFormat:@"http://app.opentracker.net/%@/%@",appname,[[keyValuePairs objectForKey:@"ti"]stringByReplacingOccurrencesOfString:@"/" withString:@"."]];
+     NSString *currentLink = [NSString stringWithFormat:@"http://app.opentracker.net/%@#%@",appname,[[keyValuePairs objectForKey:@"ti"]stringByReplacingOccurrencesOfString:@"/" withString:@"."]];
      
      /*The otpe key is used to keep track of the previous event. This event is needed to measure the amount of time the previous event has taken. This is calculated from getting the current event's timestamp and substracking the previous event's timestamp on the log.opentracker.net server*/
      @try {
@@ -540,7 +540,7 @@ static bool isFirstWiFiEvent = YES;
           //TODO: send this to OTSend.send(hashmap)
           [logDictionary  release];
      }
-     [keyValuePairs setObject:currentLink forKey:@"lc" ];
+     //[keyValuePairs setObject:currentLink forKey:@"lc" ];
      [keyValuePairs setObject:[otdataSockets networkType] forKey:@"connection"];
      [keyValuePairs setObject:[OTDataSockets platform] forKey:@"platform"];	
      [keyValuePairs setObject:[OTDataSockets screenHeight] forKey:@"sh"];
@@ -549,6 +549,22 @@ static bool isFirstWiFiEvent = YES;
      [keyValuePairs setObject:[OTDataSockets platformVersion]  forKey:@"platform version"];
      [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
      [keyValuePairs setObject:[OTDataSockets locale] forKey:@"locale"];
+     if ([keyValuePairs objectForKey:@"browser"] == nil) {
+        [keyValuePairs setObject:@"Android Native App" forKey:@"browser"];
+     }
+     if ([keyValuePairs objectForKey:@"browser version"] == nil) {
+        [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"browser version"];
+     }
+     if ([keyValuePairs objectForKey:@"lc"] != nil) {
+         NSString *lc = [keyValuePairs objectForKey:@"lc"];
+     } else if([keyValuePairs objectForKey:@"url"] != nil) {
+         NSString *lc = [keyValuePairs objectForKey:@"url"];
+         [keyValuePairs removeObjectForKey:@"url"];
+         [keyValuePairs setObject:lc forKey:@"lc"];
+     } else {
+         NSString *lc = currentLink;
+         [keyValuePairs setObject:lc forKey:@"lc"];
+     }
      NSString* carrierName = [OTDataSockets carrier];
      if(carrierName!= nil){
           [keyValuePairs setObject:carrierName forKey:@"carrier"];
