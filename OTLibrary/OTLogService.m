@@ -197,7 +197,8 @@ static bool isFirstWiFiEvent = YES;
      }
      
      //create default/initial session data
-     int randomNumberClient = (int) arc4random() % 1000000;;
+    srand(time(0));
+    int randomNumberClient = (int) rand() % 1000000; //((rand() / RAND_MAX ) * 100000) ; //;
      double currentUnixTimestampMs =    ([[NSDate date] timeIntervalSince1970]  * 1000 );
      //see: http://stackoverflow.com/questions/358207/iphone-how-to-get-current-milliseconds
      double  firstSessionStartUnixTimestamp = currentUnixTimestampMs;
@@ -728,6 +729,56 @@ static bool isFirstWiFiEvent = YES;
 	}
      NSLog(@"gzipped file name: %@", gzippedfilename);
      return gzippedfilename;
+}
+
+#pragma mark URL Encoded
+
+/*
+ This function get the string out of otui
+ */
+-(NSString *) OTUI 
+{
+    NSString *uniqueId = @"";
+    // read the users data file
+    NSString *otUserData = nil; 
+    @try{
+        otUserData = [OTFileUtils  readFile:@"otui"];
+		NSLog(@"otUserData %@",otUserData);
+    }
+    @catch (NSException *exception) {
+        NSLog(@"Can't read file otui");
+		//Sending the error message occurred as Dictionary to opentracker.net
+        NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
+        [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
+        [logDictionary setObject:@"Can't read file otui" forKey:@"message"];
+        [logDictionary setObject:[exception reason] forKey:@"reason"];
+        [logDictionary setObject:[exception callStackSymbols] forKey:@"exception"];
+        [OTSend send:logDictionary];
+        [logDictionary  release];
+        
+    }
+    if (otUserData != Nil) {
+        //initialize the data
+        @try{
+            //parse the user data
+            uniqueId = [NSString stringWithFormat:@"%@", otUserData];
+            
+        } @catch (NSException *e) {
+            //Sending the error message occurred as Dictionary to opentracker.net
+            NSLog(@"otui has corrupted data: %@", [e reason]);
+            NSMutableDictionary *logDictionary = [[NSMutableDictionary alloc] init];
+            [logDictionary setObject:@"errors" forKey:@"si"]; //log to error appName
+            [logDictionary setObject:@"otui has corrupted data" forKey:@"message"];
+            [logDictionary setObject:[e reason] forKey:@"reason"];
+            [logDictionary setObject:[e callStackSymbols] forKey:@"exception"];
+            [OTSend send:logDictionary];
+            [logDictionary  release];
+            
+        }
+    }
+
+    return uniqueId;
+
 }
 @end
 
