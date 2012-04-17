@@ -138,6 +138,13 @@
  */
 -(void) appendDataToFile : (NSMutableDictionary*) dataDictionary;
 
+/*!
+ @method OTUI
+ @abstract get the unique id of the user from the otui file
+ @return The UUID as a string 
+ */
+-(NSString*) OTUI  ;
+
 
 
 @end
