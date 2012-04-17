@@ -551,7 +551,7 @@ static bool isFirstWiFiEvent = YES;
      [keyValuePairs setObject:[OTDataSockets device] forKey:@"device"];
      [keyValuePairs setObject:[OTDataSockets locale] forKey:@"locale"];
      if ([keyValuePairs objectForKey:@"browser"] == nil) {
-        [keyValuePairs setObject:@"Android Native App" forKey:@"browser"];
+        [keyValuePairs setObject:@"iOS Native App" forKey:@"browser"];
      }
      if ([keyValuePairs objectForKey:@"browser version"] == nil) {
         [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"browser version"];
