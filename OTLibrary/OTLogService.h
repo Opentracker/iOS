@@ -52,10 +52,20 @@
  not connected via WiFi the data will be sent to a file which is then sent
  to the log service at a later time. This helps save bandwidth and helps
  with network performance.
- @param directSend: If log service should sent event data directly, indifferent of
+ @param directSendParam: If log service should send event data directly, indifferent of
  the connection.
  */
 +(void) setDirectSend : (BOOL) directSendParam ; 
+
+/*!
+ @method setLocationServices
+ @abstract Sets if the locationServices should be enbles or not.
+ The default behavior is to not allow locationServices. If this is the case, the
+ exact location of the user will not be recorded. If it is set to true, the exact
+ location of the user will be recorded and send to the opentracker log servers.
+ @param locationServicesParam: Parameter enabling/disabling the location service 
+ */
++(void) setLocationServices:(BOOL)locationServicesParam ;
 
 /*!
  @method registerSessionEvent
@@ -144,6 +154,7 @@
  @return The UUID as a string 
  */
 -(NSString*) OTUI  ;
+
 
 
 
