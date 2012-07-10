@@ -24,6 +24,8 @@
     // to test things real-time always send data directly to logging service
     // make sure to comment this out if you are not testing
     [OTLogService setDirectSend:NO];
+    //enable location services if need , it is disabled in the code by default.
+    [OTLogService setLocationServices:NO];
     [[OTLogService sharedOTLogService] sendEvent:@"application opened" ];
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
