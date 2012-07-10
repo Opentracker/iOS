@@ -299,7 +299,7 @@ static long EXPIRE_S =  60l;
     NSString *latitude = [NSString stringWithFormat:@"%f", coordinate.latitude]; 
     NSString *longitude = [NSString stringWithFormat:@"%f", coordinate.longitude];
     
-    NSString *locationCoordinates = [NSString stringWithFormat:@"%@,%@",@"0.0000", @"0.0000"];
+    NSString *locationCoordinates = [NSString stringWithFormat:@"%@,%@",latitude, longitude];
     
 	NSLog(@"12345 locationCoordinates  %@",locationCoordinates);
         
