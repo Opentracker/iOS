@@ -45,6 +45,7 @@ OTDataSockets *otdataSockets ;
 static int sessionLapseTimeMs= 1000*60*30; //TODO,testing
 static bool directSend = NO; 
 static bool isFirstWiFiEvent = YES;
+static bool locationServices = NO;
 @synthesize appname;
 
 
@@ -77,6 +78,11 @@ static bool isFirstWiFiEvent = YES;
 #pragma mark Set Direct Send
 +(void) setDirectSend:(BOOL)directSendParam {
      directSend = directSendParam; 
+}
+
+#pragma mark Set location services
++(void) setLocationServices:(BOOL)locationServicesParam {
+    locationServices = locationServicesParam; 
 }
 
 #pragma mark On Launch
@@ -556,6 +562,7 @@ static bool isFirstWiFiEvent = YES;
      if ([keyValuePairs objectForKey:@"browser version"] == nil) {
         [keyValuePairs setObject:[OTDataSockets appVersion] forKey:@"browser version"];
      }
+    
      if ([keyValuePairs objectForKey:@"lc"] != nil) {
          NSString *lc = [keyValuePairs objectForKey:@"lc"];
      } else if([keyValuePairs objectForKey:@"url"] != nil) {
@@ -566,15 +573,17 @@ static bool isFirstWiFiEvent = YES;
          NSString *lc = currentLink;
          [keyValuePairs setObject:lc forKey:@"lc"];
      }
+    if(locationServices){
+        NSString *location = [OTDataSockets locationCoordinates];
+        if(![ location isEqual:@"0.0000,0.0000"]) {
+            [keyValuePairs setObject:location forKey:@"location"];
+        }
+    }
      NSString* carrierName = [OTDataSockets carrier];
      if(carrierName!= nil){
           [keyValuePairs setObject:carrierName forKey:@"carrier"];
      }
      //if latitude and longitude value is 0,0 do not add it to the hashmap
-     NSString *location = [OTDataSockets locationCoordinates];
-     if(![ location isEqual:@"0.0000,0.0000"]) {
-          [keyValuePairs setObject:location forKey:@"location"];
-     }
      //also add any session state data
      NSMutableDictionary *dataFiles =[[NSMutableDictionary alloc] init];
      
