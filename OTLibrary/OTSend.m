@@ -63,7 +63,6 @@
         NSString *value = [keyValuePairs objectForKey:key];
         url = [NSString stringWithFormat:@"%@%@=%@&", url, [self urlEncoded:key] , [self urlEncoded:value]];     		
 	}
-    
     NSString *responseDataString =nil;
     //if any error encountered on request object
     //NSString* encodedData = [self urlEncoding];
@@ -71,6 +70,7 @@
 }
 
 +(void) sendNewThread : (NSString*) url { 
+    NSLog(@"url:%@",url);
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     //add a background task , when/if the application is moved to the background when data is being uploaded
     UIBackgroundTaskIdentifier *bgtask = nil;
@@ -124,7 +124,7 @@
         UIBackgroundTaskIdentifier *bgtask = nil;
         UIApplication *app = [UIApplication sharedApplication];
         bgtask = [app beginBackgroundTaskWithExpirationHandler:^{}];
-        NSString* newFileName = [NSString stringWithFormat:@"%@.%@.gz",[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""], [self UUID]];
+        NSString* newFileName = [NSString stringWithFormat:@"%@.%@.gz",[[fileToSend stringByReplacingOccurrencesOfString:@".gz" withString:@""] stringByReplacingOccurrencesOfString:@"fileToSend" withString:@""], [self UUID]];
         NSLog(@"new filename: %@", newFileName);
         //string data
         // see uploading file : http://stackoverflow.com/questions/2229002/how-to-send-file-along-some-post-variables-with-objective-c-iphone-sdk
